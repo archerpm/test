@@ -11,6 +11,7 @@ await p.getByRole("button", { name: "Пройти опрос" }).click();
 const next = () => p.getByRole("button", { name: /Далее|Показать результат/ }).click();
 const ans = async (t) => { await p.getByRole("button", { name: t, exact: true }).click(); await next(); };
 await p.getByRole("spinbutton").fill("8"); await next();
+await ans("Нет");
 await ans("Да"); await ans("Нет"); await ans("Родитель или усыновитель");
 await ans("Работаю неполный день или неделю (в т. ч. дистанционно)");
 await ans("Нет"); await ans("Нет"); await ans("Нет"); await ans("Нет");
@@ -22,7 +23,7 @@ await p.getByRole("button", { name: "Показать результат" }).cli
 await p.waitForSelector("text=Вам положено");
 // памятка подачи по федеральной выплате
 const fed = p.locator("details.measure", { hasText: "Федеральная выплата по уходу" }).first();
-await fed.locator("summary").click();
+await fed.locator("summary").first().click();
 await fed.getByRole("button", { name: "Памятка подачи" }).click();
 await p.waitForSelector("text=Памятка подачи: Федеральная выплата");
 const memo = await p.innerText("article.memo");
@@ -30,7 +31,7 @@ if (!memo.includes("gosuslugi.ru/620286") || !memo.includes("Шаги формы
 await p.getByRole("button", { name: /К результату/ }).click();
 // заявление 516н
 const wk = p.locator("details.measure", { hasText: "4 дополнительных оплачиваемых" }).first();
-await wk.locator("summary").click();
+await wk.locator("summary").first().click();
 await wk.getByRole("button", { name: /форма 516н/ }).click();
 await p.getByLabel(/Кому/).fill("Директор ООО «Ромашка» Иванов И. И.");
 await p.getByLabel(/От кого/).fill("Бухгалтер Петрова А. А.");

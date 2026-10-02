@@ -198,3 +198,67 @@ fieldset { border:1px solid var(--line); border-radius:12px; }
   .chev, .tabs { display:none; }
   .measure summary { cursor:default; }
 }
+
+/* ---- второй этап: «не знаю», разделы результата, план, документы, словарик ---- */
+.opt.unknown { background:transparent; border-style:dashed; color:var(--muted); }
+.opt.unknown.sel { color:var(--ink); }
+
+.views { display:flex; gap:6px; margin:0 0 18px; padding:4px; background:var(--surface); border:1px solid var(--line); border-radius:16px; position:sticky; top:env(safe-area-inset-top, 0px); z-index:3; }
+.views button { flex:1 1 0; border:none; background:transparent; border-radius:12px; padding:10px 8px; min-height:44px; font-weight:600; font-size:.92rem; gap:6px; flex-wrap:wrap; }
+.views button span { font-variant-numeric:tabular-nums; font-weight:500; color:var(--muted); font-size:.82rem; }
+.views button[aria-current="true"] { background:var(--accent); color:var(--accent-ink); }
+.views button[aria-current="true"] span { color:var(--accent-ink); opacity:.85; }
+.tabs { top:calc(60px + env(safe-area-inset-top, 0px)); }
+
+.notices { display:grid; gap:8px; margin:0 0 16px; }
+.notices p { display:flex; gap:10px; background:var(--accent-soft); border-radius:14px; padding:12px 14px; margin:0; font-size:.93rem; }
+.notices svg { flex:none; margin-top:2px; color:var(--accent); }
+.stale { background:var(--maybe-soft); border:1px solid var(--maybe); border-radius:14px; padding:10px 14px; margin:0 0 16px; font-size:.9rem; }
+.stale p { margin:0 0 .4em; } .stale p:last-child { margin:0; }
+
+.term { font:inherit; color:inherit; background:none; border:none; border-bottom:1.5px dotted var(--accent); border-radius:0; padding:0; min-height:0; display:inline; cursor:pointer; }
+.term:hover { border-color:var(--ink); }
+.term[aria-expanded="true"] { background:var(--accent-soft); border-radius:4px; }
+.gdef { display:block; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:8px 12px; margin:6px 0; font-size:.88rem; color:var(--muted); }
+.gdef b { color:var(--ink); }
+.glossary { margin-top:14px; } .glossary summary { cursor:pointer; color:var(--accent); font-weight:600; }
+.glossary dl { display:grid; gap:8px; margin:10px 0 0; } .glossary dt { font-weight:600; color:var(--ink); } .glossary dd { margin:0; }
+
+.plan .help, .docsview .help { margin:0 0 6px; }
+.group-title small { text-transform:none; letter-spacing:0; font-weight:400; }
+.steps-list { list-style:none; margin:0; padding:0; display:grid; gap:10px; }
+.step { display:flex; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 16px; box-shadow:var(--shadow); }
+.step.done { opacity:.6; } .step.done b { text-decoration:line-through; }
+.stepcheck input, .shared-item input { width:1.4rem; height:1.4rem; accent-color:var(--accent); flex:none; margin-top:.1rem; }
+.stepbody { display:flex; flex-direction:column; gap:4px; min-width:0; }
+.why-line { color:var(--muted); font-size:.92rem; }
+.stepmeta { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.date.sm { font-size:.8rem; padding:2px 8px; }
+
+.shared { list-style:none; margin:10px 0 18px; padding:0; display:grid; gap:10px; }
+.shared-item { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 16px; box-shadow:var(--shadow); }
+.shared-item.done { opacity:.65; }
+.shared-item label { display:flex; gap:12px; cursor:pointer; align-items:flex-start; }
+.shared-item .where { display:block; color:var(--muted); font-size:.9rem; margin-top:2px; }
+.needfor { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin:10px 0 0 2.2rem; }
+.needfor small { color:var(--muted); }
+.chip-btn { font-size:.8rem; padding:3px 10px; min-height:0; border-radius:99px; background:var(--surface-2); font-weight:500; }
+.print-only { display:none; }
+.otherdocs { margin:0 0 12px; }
+.otherdocs h4 { margin:8px 0 4px; }
+
+.why { border-top:1px dashed var(--line); padding-top:10px; }
+.why summary { cursor:pointer; color:var(--accent); font-weight:600; font-size:.92rem; }
+.why .help { margin:8px 0 4px; }
+
+.exportbox { margin:26px 0 0; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:12px 16px; }
+.exportbox summary { cursor:pointer; font-weight:600; }
+.exportbox textarea { width:100%; font:inherit; font-size:.82rem; padding:10px; border:1.5px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); resize:vertical; word-break:break-all; }
+.lab { display:block; font-weight:600; font-size:.9rem; margin:12px 0 4px; }
+.no-list small { color:var(--maybe); }
+
+@media (max-width: 560px) {
+  .views button { font-size:.82rem; padding:8px 4px; }
+  .tabs { top:calc(88px + env(safe-area-inset-top, 0px)); }
+}
+@media print { .print-only { display:block; font-size:.85rem; margin:4px 0 0 2rem; } .views, .exportbox, .glossary { display:none; } .gdef { display:none; } .term { border:none; } }

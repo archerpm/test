@@ -11,6 +11,7 @@ await p.getByRole("button", { name: "Пройти опрос" }).click();
 const answer = async (text) => { await p.getByRole("button", { name: text, exact: true }).click(); await p.getByRole("button", { name: /Далее|Показать результат/ }).click(); };
 await p.getByRole("spinbutton").fill("8");
 await p.getByRole("button", { name: "Далее" }).click();
+await answer("Нет");                      // есть ли ещё дети-инвалиды
 await answer("Да");                       // Москва
 await answer("Нет");                      // ТиНАО
 await answer("Родитель или усыновитель");

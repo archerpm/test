@@ -131,3 +131,39 @@ describe("глоссарий", () => {
     for (const t of ["ИПРА", "МСЭ", "ТСР", "НСУ", "СФР", "МФЦ", "ЦПМПК"]) expect(GLOSSARY[t], t).toBeTruthy();
   });
 });
+
+import { splitTerms } from "./Gloss";
+import { parseSaved, serialize } from "./storage";
+
+describe("словарик в тексте", () => {
+  it("находит сокращения и не трогает части слов", () => {
+    const p = splitTerms("Нужна справка МСЭ и ИПРА, но не МСЭКС и не ИПРАВ.");
+    expect(p.filter((x) => x.term).map((x) => x.term)).toEqual(["МСЭ", "ИПРА"]);
+  });
+  it("распознаёт сокращения с цифрами и дефисом", () => {
+    expect(splitTerms("справка 2-НДФЛ").some((x) => x.term === "2-НДФЛ")).toBe(true);
+  });
+  it("текст без сокращений остаётся цельным", () => {
+    expect(splitTerms("обычный текст")).toEqual([{ text: "обычный текст" }]);
+  });
+});
+
+describe("сохранение", () => {
+  it("круг: сохранённое читается обратно", () => {
+    const s = parseSaved(serialize({ age: 8, moscow: true, role: "parent" }, { "plan:a4": true }, new Date("2026-10-02T10:00:00Z")));
+    expect(s?.answers).toEqual({ age: 8, moscow: true, role: "parent" });
+    expect(s?.progress).toEqual({ "plan:a4": true });
+    expect(s?.savedAt).toBe("2026-10-02T10:00:00.000Z");
+  });
+  it("мусор и чужой формат отклоняются", () => {
+    expect(parseSaved("не json")).toBeNull();
+    expect(parseSaved('{"v":2,"answers":{}}')).toBeNull();
+    expect(parseSaved('{"v":1,"answers":[1,2]}')).toBeNull();
+    expect(parseSaved("null")).toBeNull();
+  });
+  it("лишние и опасные значения отбрасываются", () => {
+    const s = parseSaved('{"v":1,"answers":{"age":8,"x":{"a":1},"y":[1]},"progress":{"a":true,"b":"yes"}}');
+    expect(s?.answers).toEqual({ age: 8 });
+    expect(s?.progress).toEqual({ a: true });
+  });
+});
