@@ -204,7 +204,7 @@ fieldset { border:1px solid var(--line); border-radius:12px; }
 .opt.unknown.sel { color:var(--ink); }
 
 .views { display:flex; gap:6px; margin:0 0 18px; padding:4px; background:var(--surface); border:1px solid var(--line); border-radius:16px; position:sticky; top:env(safe-area-inset-top, 0px); z-index:3; }
-.views button { transition:none; flex:1 1 0; border:none; background:transparent; border-radius:12px; padding:10px 8px; min-height:44px; font-weight:600; font-size:.92rem; gap:6px; flex-wrap:wrap; }
+.views button { transition:none; flex-direction:column; gap:0; flex:1 1 0; border:none; background:transparent; border-radius:12px; padding:10px 8px; min-height:44px; font-weight:600; font-size:.92rem; gap:6px; flex-wrap:wrap; }
 .views button span { font-variant-numeric:tabular-nums; font-weight:500; color:var(--muted); font-size:.82rem; }
 .views button[aria-current="true"] { background:var(--accent); color:var(--accent-ink); }
 .views button[aria-current="true"] span { color:var(--accent-ink); }
