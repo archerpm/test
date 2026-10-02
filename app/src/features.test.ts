@@ -179,3 +179,12 @@ describe("sanitizeAnswers", () => {
     expect(Object.keys(good).length).toBe(3);
   });
 });
+
+describe("безопасность данных", () => {
+  it("все ссылки в мерах — https (нет javascript:, http:, data:)", () => {
+    for (const m of MEASURES) {
+      for (const l of m.apply) expect(l.url, m.id).toMatch(/^https:\/\//);
+      if (m.form) expect(m.form.url, m.id).toMatch(/^https:\/\//);
+    }
+  });
+});

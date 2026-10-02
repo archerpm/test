@@ -58,6 +58,9 @@ if ($LASTEXITCODE) { throw "не удалось создать пакет" }
 Write-Host ("Пакет: " + $tgz + " (" + [math]::Round((Get-Item $tgz).Length / 1MB, 2) + " МБ)")
 if ($BundleOnly) { return }
 
+if ($Domain -notmatch '^(_|[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?)$') { throw "Недопустимый домен: $Domain" }
+if ($CertbotEmail -and $CertbotEmail -notmatch '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+$') { throw "Недопустимая почта" }
+if ($Target -notmatch '^[A-Za-z0-9._@:\[\]-]+$') { throw "Недопустимый адрес сервера" }
 $keyArgs = @()
 if ($Identity) { $keyArgs = @("-i", $Identity, "-o", "IdentitiesOnly=yes") }
 Write-Host "== Отправка на $Target (потребуется пароль или ключ)"

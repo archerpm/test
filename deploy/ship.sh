@@ -17,6 +17,10 @@ while [ $# -gt 0 ]; do
     *) TARGET="$1"; shift;;
   esac
 done
+[[ "$DOMAIN" =~ ^(_|[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?)$ ]] || { echo "Недопустимый домен"; exit 1; }
+[[ -z "$EMAIL" || "$EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+$ ]] || { echo "Недопустимая почта"; exit 1; }
+[[ -z "$WEBPORT" || "$WEBPORT" =~ ^[0-9]{2,5}$ ]] || { echo "Недопустимый порт"; exit 1; }
+[[ "$PORT" =~ ^[0-9]{1,5}$ ]] || { echo "Недопустимый порт SSH"; exit 1; }
 [ -n "$TARGET" ] || [ "$BUNDLE_ONLY" = 1 ] || { echo "Укажите адрес: ./deploy/ship.sh root@IP"; exit 1; }
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/app"

@@ -15,6 +15,10 @@ set -euo pipefail
 
 B="$(cd "$(dirname "$0")/.." && pwd)"   # корень распакованного пакета: dist/, tools/, deploy/
 DOMAIN="${DOMAIN:-_}"; WEBPORT="${WEBPORT:-}"; DRY="${DRY_RUN:-0}"
+# значения попадают в конфигурацию nginx и в команды — допускаем только безопасные символы
+[[ "$DOMAIN" =~ ^(_|[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?)$ ]] || { echo "!! Недопустимый домен: $DOMAIN"; exit 1; }
+[[ -z "$WEBPORT" || "$WEBPORT" =~ ^[0-9]{2,5}$ ]] || { echo "!! Недопустимый порт: $WEBPORT"; exit 1; }
+[[ -z "${EMAIL:-}" || "${EMAIL:-}" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+$ ]] || { echo "!! Недопустимая почта: $EMAIL"; exit 1; }
 export DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=l NEEDRESTART_SUSPEND=1
 log()  { printf '\n== %s\n' "$*"; }
 warn() { printf '!! %s\n' "$*"; }
