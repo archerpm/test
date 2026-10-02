@@ -167,3 +167,15 @@ describe("сохранение", () => {
     expect(s?.progress).toEqual({ a: true });
   });
 });
+
+import { sanitizeAnswers } from "./engine";
+import { QUESTIONS as QS } from "./data";
+describe("sanitizeAnswers", () => {
+  it("отбрасывает неизвестные ключи и недопустимые значения", () => {
+    const num = QS.find((q) => q.type === "number")!, ch = QS.find((q) => q.type === "choice")!, bo = QS.find((q) => q.type === "bool")!;
+    const out = sanitizeAnswers(QS, { [num.id]: "x", [ch.id]: "нет-такого", [bo.id]: "да", evil: true, __proto__: 1 } as never);
+    expect(out).toEqual({});
+    const good = sanitizeAnswers(QS, { [num.id]: 8, [ch.id]: ch.options![0][0], [bo.id]: true });
+    expect(Object.keys(good).length).toBe(3);
+  });
+});

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AMOUNTS, CATALOG, GLOSSARY, MEASURES, QUESTIONS } from "./data";
-import { aggregateDocuments, buildPlan, evaluate, groupByVerdict, staleness, visibleQuestions } from "./engine";
+import { aggregateDocuments, buildPlan, evaluate, groupByVerdict, sanitizeAnswers, staleness, visibleQuestions } from "./engine";
 import Form516n from "./forms/Form516n";
 import Gloss from "./Gloss";
 import Memo from "./forms/Memo";
@@ -86,8 +86,9 @@ export default function App() {
             save={save}
             setSave={setSave}
             onStart={() => { setAnswers({}); setProgress({}); setStage("ask"); }}
-            onResume={() => { setAnswers(saved?.answers ?? {}); setProgress(saved?.progress ?? {}); setSave(true); setStage("ask"); }}
-            onLoadFile={(a, pr) => {
+            onResume={() => { setAnswers(sanitizeAnswers(QUESTIONS, saved?.answers ?? {})); setProgress(saved?.progress ?? {}); setSave(true); setStage("ask"); }}
+            onLoadFile={(raw, pr) => {
+              const a = sanitizeAnswers(QUESTIONS, raw);
               setAnswers(a); setProgress(pr);
               // все вопросы отвечены — сразу к результату, иначе продолжаем опрос
               setStage(visibleQuestions(QUESTIONS, a).every((q) => a[q.id] !== undefined) ? "result" : "ask");
@@ -100,7 +101,7 @@ export default function App() {
             answers={answers}
             progress={progress}
             toggleProgress={toggleProgress}
-            onImport={(a, p) => { setAnswers(a); setProgress(p); }}
+            onImport={(a, p) => { setAnswers(sanitizeAnswers(QUESTIONS, a)); setProgress(p); }}
             onBack={() => setStage("ask")}
             onRestart={() => { setAnswers({}); setProgress({}); setStage("intro"); }}
             onOpenForm={(kind, id) => { setMemoId(id); setStage(kind === "form516n" ? "form516n" : "memo"); }}
@@ -131,7 +132,7 @@ function Intro(p: { hasSaved: boolean; save: boolean; setSave: (v: boolean) => v
   const fileRef = useRef<HTMLInputElement>(null);
   const [err, setErr] = useState("");
   const loadFile = async (f: File) => {
-    const s = parseSaved(await f.text());
+    const s = f.size > 1_000_000 ? null : parseSaved(await f.text());
     if (!s) { setErr("Не удалось прочитать файл: это не сохранённый прогресс сервиса."); return; }
     p.onLoadFile(s.answers, s.progress);
   };
@@ -280,6 +281,11 @@ function Result(p: {
   const first = order.find((v) => g[v].length) ?? (gotList.length ? "got" : "yes");
   const [tab, setTab] = useState<Verdict | "got">(first);
   const [note, setNote] = useState("");
+  // если в выбранной вкладке не осталось мер (все отмечены «получено» или сняты) — переходим к непустой
+  useEffect(() => {
+    const count = tab === "got" ? gotList.length : g[tab].length;
+    if (count === 0) { const t = order.find((v) => g[v].length) ?? (gotList.length ? "got" : null); if (t) setTab(t); }
+  }, [tab, gotList.length, active.length]); // eslint-disable-line react-hooks/exhaustive-deps
   const [view, setView] = useState<View>("measures");
   const [pending, setPending] = useState<string | null>(null);
   const list = tab === "got" ? gotList : g[tab];
@@ -565,7 +571,7 @@ function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: An
         {!EMBED && (
           <>
             <button className="btn sm" onClick={() => fileRef.current?.click()}>Загрузить из файла</button>
-            <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(await f.text()); e.target.value = ""; }} />
+            <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) load(f.size > 1_000_000 ? "" : await f.text()); e.target.value = ""; }} />
           </>
         )}
       </div>

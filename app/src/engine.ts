@@ -250,3 +250,17 @@ export function staleness(measures: Measure[], today = new Date()) {
   const days = Math.floor((today.getTime() - oldest.getTime()) / dayMs);
   return { oldest, days };
 }
+
+/** Оставляет только ответы на известные вопросы с допустимыми значениями (файлы и коды можно править руками). */
+export function sanitizeAnswers(questions: Question[], a: Answers): Answers {
+  const out: Answers = {};
+  for (const q of questions) {
+    const v = a[q.id];
+    if (v === undefined) continue;
+    if (v === UNKNOWN) { if (q.type !== "number" && !q.noUnknown) out[q.id] = v; continue; }
+    if (q.type === "bool" && typeof v === "boolean") out[q.id] = v;
+    else if (q.type === "choice" && typeof v === "string" && q.options!.some(([o]) => o === v)) out[q.id] = v;
+    else if (q.type === "number" && typeof v === "number" && Number.isFinite(v) && v >= (q.min ?? 0) && v <= (q.max ?? 120)) out[q.id] = v;
+  }
+  return out;
+}
