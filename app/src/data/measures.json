@@ -7,7 +7,7 @@
   "apply": [
    {
     "kind": "apply",
-    "label": "Подать заявление на Госуслугах («Доставка пенсии и социальных выплат СФР»)",
+    "label": "Подать заявление на Госуслугах (выбор способа доставки пенсии и выплат СФР)",
     "url": "https://www.gosuslugi.ru/600109/1/form"
    },
    {
@@ -1029,12 +1029,22 @@
   "apply": [
    {
     "kind": "apply",
-    "label": "Госуслуги: «Оформить бесплатную парковку» (раздел для инвалидов)",
+    "label": "Госуслуги: предоставление парковки на местах для инвалидов",
+    "url": "https://www.gosuslugi.ru/613226/1/form"
+   },
+   {
+    "kind": "info",
+    "label": "Госуслуги: проверка разрешения на парковку для инвалидов",
+    "url": "https://www.gosuslugi.ru/invalidam/check-transport"
+   },
+   {
+    "kind": "info",
+    "label": "Госуслуги: раздел «Транспорт» для инвалидов",
     "url": "https://www.gosuslugi.ru/invalidam/transport"
    },
    {
     "kind": "info",
-    "label": "Описание: льготное парковочное разрешение (mos.ru)",
+    "label": "Описание: парковочные разрешения в Москве (mos.ru)",
     "url": "https://www.mos.ru/otvet-transport/kak-oformit-lgotnoe-razreshenie-na-parkovku/"
    }
   ],
@@ -1077,9 +1087,24 @@
   "authority": "Врач медорганизации ДЗМ",
   "apply": [
    {
+    "kind": "apply",
+    "label": "Запись к врачу на mos.ru (для выписки льготного рецепта)",
+    "url": "https://www.mos.ru/services/zapis-k-vrachu/"
+   },
+   {
     "kind": "info",
     "label": "Описание: как получить льготные лекарства (mos.ru)",
     "url": "https://www.mos.ru/otvet-zdorovie/kak-i-gde-poluchit-lgotnye-lekarstva/"
+   },
+   {
+    "kind": "info",
+    "label": "Льготное лекарство в коммерческой аптеке: электронные рецепты (Мосгорздрав)",
+    "url": "https://mosgorzdrav.ru/recept"
+   },
+   {
+    "kind": "info",
+    "label": "Электронная медицинская карта (ЕМИАС)",
+    "url": "https://www.mos.ru/pgu2/landing/1127/"
    }
   ],
   "status": "confirmed",
@@ -1120,8 +1145,33 @@
   "authority": "СФР; МГЦР",
   "apply": [
    {
+    "kind": "apply",
+    "label": "Получить ТСР: федеральное обеспечение (mos.ru)",
+    "url": "https://www.mos.ru/pgu2/landing/1510729/"
+   },
+   {
+    "kind": "apply",
+    "label": "Компенсация за самостоятельно купленное ТСР (mos.ru)",
+    "url": "https://www.mos.ru/pgu2/landing/1781790/"
+   },
+   {
+    "kind": "apply",
+    "label": "Электронный сертификат на ТСР (через Госуслуги)",
+    "url": "https://www.mos.ru/pgu2/landing/1733934/"
+   },
+   {
+    "kind": "apply",
+    "label": "Региональная компенсация на ТСР: столик, сиденье для ванны и др. (mos.ru)",
+    "url": "https://www.mos.ru/pgu2/landing/1502802/"
+   },
+   {
     "kind": "info",
-    "label": "Описание: как подать заявку на ТСР (Госуслуги; кнопка «Подать заявку» на странице)",
+    "label": "Госуслуги: обеспечение ТСР (москвичи подают на mos.ru)",
+    "url": "https://www.gosuslugi.ru/622843/1/form"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: как подать заявку на ТСР",
     "url": "https://www.gosuslugi.ru/invalidam/rehabilitation"
    },
    {
@@ -1450,8 +1500,23 @@
   "apply": [
    {
     "kind": "info",
+    "label": "Описание: помощь в трудной жизненной ситуации (mos.ru; подача — в МФЦ «Мои документы»)",
+    "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-poluchit-pomosch-v-trudnoy-zhiznennoy-situacii/"
+   },
+   {
+    "kind": "info",
     "label": "Описание: электронный социальный сертификат (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-polzovatsya-socialnym-sertifikatom/"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: программа «Социальный контракт» (заявление очно в «Моя карьера»)",
+    "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-stat-uchastnikom-proekta-socialnyy-kontrakt/"
+   },
+   {
+    "kind": "info",
+    "label": "МФЦ «Мои документы»",
+    "url": "https://www.mos.ru/pgu/ru/md/"
    },
    {
     "kind": "info",
@@ -1570,13 +1635,8 @@
   "authority": "Работодатель / ИФНС",
   "apply": [
    {
-    "kind": "apply",
-    "label": "Личный кабинет налогоплательщика (вычет через ИФНС)",
-    "url": "https://lkfl2.nalog.ru/lkfl/"
-   },
-   {
     "kind": "info",
-    "label": "Описание: стандартные налоговые вычеты (ФНС)",
+    "label": "Стандартный вычет оформляется через работодателя (в ЛК ФНС такого пункта нет). Описание (ФНС)",
     "url": "https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/nalog_vichet/standart_nv/"
    }
   ],
@@ -1642,7 +1702,7 @@
   "apply": [
    {
     "kind": "apply",
-    "label": "Личный кабинет налогоплательщика (заявление на вычет)",
+    "label": "ЛК налогоплательщика → Каталог обращений → Получить налоговый вычет → Вычет при оплате образования",
     "url": "https://lkfl2.nalog.ru/lkfl/"
    },
    {
@@ -1694,12 +1754,12 @@
   "apply": [
    {
     "kind": "apply",
-    "label": "Личный кабинет налогоплательщика (заявление о льготе)",
+    "label": "ЛК налогоплательщика → Каталог обращений → Оформить льготу",
     "url": "https://lkfl2.nalog.ru/lkfl/"
    },
    {
     "kind": "info",
-    "label": "Описание: как оформить льготу по налогу (ФНС Москвы)",
+    "label": "Описание: как оформить льготу по налогу (ФНС Москвы; способы: ЛК, почта, ИФНС, МФЦ)",
     "url": "https://www.nalog.gov.ru/rn77/fl/pay_taxes/flat/privilege/"
    }
   ],
@@ -1759,12 +1819,12 @@
   "apply": [
    {
     "kind": "apply",
-    "label": "Личный кабинет налогоплательщика (заявление о льготе)",
+    "label": "ЛК налогоплательщика → Каталог обращений → Оформить льготу",
     "url": "https://lkfl2.nalog.ru/lkfl/"
    },
    {
     "kind": "info",
-    "label": "Описание: как оформить льготу по налогу (ФНС Москвы)",
+    "label": "Описание: как оформить льготу по налогу (ФНС Москвы; способы: ЛК, почта, ИФНС, МФЦ)",
     "url": "https://www.nalog.gov.ru/rn77/fl/pay_taxes/flat/privilege/"
    }
   ],
@@ -1805,13 +1865,18 @@
   "authority": "СФР",
   "apply": [
    {
+    "kind": "apply",
+    "label": "Заявление на Госуслугах: компенсация стоимости полиса ОСАГО инвалидам и детям-инвалидам",
+    "url": "https://www.gosuslugi.ru/610964/1/form"
+   },
+   {
     "kind": "info",
     "label": "Описание условий и порядка: компенсация ОСАГО (СФР)",
     "url": "https://sfr.gov.ru/grazhdanam/invalidam/vyplaty_i_lgoty/kompensaciya_stoimostipolisa_OSAGO/"
    },
    {
     "kind": "info",
-    "label": "Госуслуги: раздел «Транспорт» для инвалидов (заявление — в нём или в СФР/МФЦ)",
+    "label": "Госуслуги: раздел «Транспорт» для инвалидов",
     "url": "https://www.gosuslugi.ru/invalidam/transport"
    }
   ],
@@ -1866,9 +1931,24 @@
   "authority": "СФР",
   "apply": [
    {
+    "kind": "apply",
+    "label": "Назначение пенсии СФР на Госуслугах (общая услуга; основание «родитель инвалида с детства» определяется по документам)",
+    "url": "https://www.gosuslugi.ru/619724/1/form"
+   },
+   {
     "kind": "info",
-    "label": "Описание и порядок обращения: досрочная пенсия родителям (СФР; заявление — Госуслуги, СФР или МФЦ)",
+    "label": "Описание: досрочная пенсия родителям инвалидов с детства (СФР)",
     "url": "https://sfr.gov.ru/grazhdanam/pensionnoe_obespechenie/strahovaya_pensiya_po_starosti/dosrochnaya/roditelyam_invalidov_s_detstva/"
+   },
+   {
+    "kind": "info",
+    "label": "Порядок назначения страховых пенсий по старости (СФР)",
+    "url": "https://sfr.gov.ru/grazhdanam/pensionnoe_obespechenie/strahovaya_pensiya_po_starosti/naznacheniye/"
+   },
+   {
+    "kind": "info",
+    "label": "Госуслуги: как оформить страховую пенсию по старости",
+    "url": "https://www.gosuslugi.ru/help/faq/pension/2110"
    }
   ],
   "status": "confirmed",
