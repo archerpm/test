@@ -50,6 +50,9 @@ describe("данные", () => {
 });
 
 describe("опрос", () => {
+  it("у каждого вопроса есть подробное пояснение", () => {
+    for (const q of Q) expect((q.help ?? "").length, q.id).toBeGreaterThan(60);
+  });
   it("скрытые вопросы не отображаются, скрытые bool = false", () => {
     const a: Answers = { moscow: false, role: "guardian" };
     const ids = visibleQuestions(Q, a).map((q) => q.id);
