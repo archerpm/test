@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # Сборка и выкладка на VPS одной командой (Linux/macOS/Git Bash). Из корня репозитория:
-#   ./deploy/ship.sh root@IP [-i путь_к_ключу] [-p порт] [-d домен] [--certbot почта] [--bundle-only] [--skip-tests]
+#   ./deploy/ship.sh root@IP [-i путь_к_ключу] [-w веб-порт] [--preflight] [-p порт] [-d домен] [--certbot почта] [--bundle-only] [--skip-tests]
 # Пароль/ключ спрашивает ssh в вашем терминале. Скрипт ничего не сохраняет и никуда не отправляет, кроме вашего сервера.
 set -euo pipefail
-TARGET=""; IDENTITY=""; PORT=22; DOMAIN="_"; EMAIL=""; BUNDLE_ONLY=0; SKIP_TESTS=0
+TARGET=""; IDENTITY=""; WEBPORT=""; PREFLIGHT=0; PORT=22; DOMAIN="_"; EMAIL=""; BUNDLE_ONLY=0; SKIP_TESTS=0
 while [ $# -gt 0 ]; do
   case "$1" in
     -p) PORT="$2"; shift 2;;
     -i) IDENTITY="$2"; shift 2;;
+    -w) WEBPORT="$2"; shift 2;;
+    --preflight) PREFLIGHT=1; shift;;
     -d) DOMAIN="$2"; shift 2;;
     --certbot) EMAIL="$2"; shift 2;;
     --bundle-only) BUNDLE_ONLY=1; shift;;
@@ -37,4 +39,4 @@ echo "Пакет: $TMP/posobie-bundle.tgz ($(du -h "$TMP/posobie-bundle.tgz" | c
 echo "== Отправка на $TARGET (потребуется пароль или ключ)"
 KEY=(); [ -n "$IDENTITY" ] && KEY=(-i "$IDENTITY" -o IdentitiesOnly=yes)
 scp "${KEY[@]}" -P "$PORT" "$TMP/posobie-bundle.tgz" "$TARGET:/tmp/posobie-bundle.tgz"
-ssh "${KEY[@]}" -p "$PORT" "$TARGET" "rm -rf /tmp/posobie-bundle && mkdir /tmp/posobie-bundle && tar -xzf /tmp/posobie-bundle.tgz -C /tmp/posobie-bundle && DOMAIN='$DOMAIN' CERTBOT=$([ -n "$EMAIL" ] && echo 1 || echo 0) EMAIL='$EMAIL' bash /tmp/posobie-bundle/deploy/install-bundle.sh; rm -rf /tmp/posobie-bundle /tmp/posobie-bundle.tgz"
+ssh "${KEY[@]}" -p "$PORT" "$TARGET" "rm -rf /tmp/posobie-bundle && mkdir /tmp/posobie-bundle && tar -xzf /tmp/posobie-bundle.tgz -C /tmp/posobie-bundle && DRY_RUN=$PREFLIGHT WEBPORT='$WEBPORT' DOMAIN='$DOMAIN' CERTBOT=$([ -n "$EMAIL" ] && echo 1 || echo 0) EMAIL='$EMAIL' bash /tmp/posobie-bundle/deploy/install-bundle.sh; rm -rf /tmp/posobie-bundle /tmp/posobie-bundle.tgz"

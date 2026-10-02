@@ -8,5 +8,14 @@ Type=oneshot
 User=www-data
 WorkingDirectory=/opt/posobie-tools
 Environment=PLAIN=1
+# Не мешаем другим службам сервера: низкий приоритет, ограничения по процессору и памяти, только запись в каталог отчёта
+Nice=19
+CPUQuota=20%
+MemoryMax=256M
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/www/posobie-status
 # Отчёт пишется во временный файл и подменяется целиком, чтобы читатель не видел недописанный
-ExecStart=/bin/sh -c '{ date "+Проверка: %%Y-%%m-%%d %%H:%%M (Москва)"; node scripts/check-freshness.mjs; node scripts/check-links.mjs; } > /var/www/posobie-status/links.txt.new 2>&1; mv /var/www/posobie-status/links.txt.new /var/www/posobie-status/links.txt'
+ExecStart=/bin/sh -c '{ date "+Проверка: %%Y-%%m-%%d %%H:%%M"; @NODE@ scripts/check-freshness.mjs; @NODE@ scripts/check-links.mjs; } > /var/www/posobie-status/links.txt.new 2>&1; mv /var/www/posobie-status/links.txt.new /var/www/posobie-status/links.txt'

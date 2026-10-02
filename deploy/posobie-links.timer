@@ -2,7 +2,8 @@
 Description=Еженедельная проверка ссылок сервиса
 
 [Timer]
-OnCalendar=Mon *-*-* 06:00:00
+# понедельник, 06:00 по Москве, независимо от часового пояса сервера (системный пояс не меняем)
+OnCalendar=Mon *-*-* 06:00:00 Europe/Moscow
 Persistent=true
 RandomizedDelaySec=300
 
