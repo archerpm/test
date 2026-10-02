@@ -1,11 +1,7 @@
 import { describe, expect, it } from "vitest";
-import measures from "./data/measures.json";
-import questions from "./data/questions.json";
+import { MEASURES as M, QUESTIONS as Q } from "./data";
 import { evaluate, groupByVerdict, nextAnnual, normalize, visibleQuestions } from "./engine";
-import type { Answers, Measure, Question } from "./types";
-
-const M = measures as unknown as Measure[];
-const Q = questions as unknown as Question[];
+import type { Answers } from "./types";
 
 const run = (a: Answers, today = new Date(2026, 9, 2)) => {
   const r = evaluate(M, Q, a, today);

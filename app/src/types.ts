@@ -1,3 +1,4 @@
+export const UNKNOWN = "?";
 export type Answers = Record<string, string | number | boolean | undefined>;
 
 /** Условие правила. Неотвеченный вопрос даёт false (кроме bool — он по умолчанию false). */
@@ -11,6 +12,10 @@ export interface Question {
   id: string;
   type: "bool" | "number" | "choice";
   text: string;
+  /** Короткое название для объяснений («Вы работаете»). */
+  short?: string;
+  /** true — ответ «Не знаю» недоступен (вопрос определяет ветвление). */
+  noUnknown?: boolean;
   help?: string;
   min?: number;
   max?: number;
@@ -51,8 +56,20 @@ export interface Measure {
   forms?: { kind: "form516n" | "memo"; label: string }[];
   /** Памятка подачи в онлайн-форме (поля, вложения, сроки) — из чтения формы на mos.ru/Госуслугах */
   form?: { title: string; url: string; steps: string[]; prepare: string[]; attachments: string[]; notes: string[] };
+  /** Шаг плана действий: priority 1 — срочно, 2 — в ближайший месяц, 3 — по необходимости */
+  plan?: { priority: 1 | 2 | 3; action: string; why: string };
   /** Ежегодная дата, ближайшую можно посчитать по "сегодня" */
   annual?: { month: number; day: number; label: string };
+}
+
+export interface Factor {
+  question: string;
+  answer: string;
+}
+
+export interface Suggestion {
+  question: string;
+  answer: string;
 }
 
 export interface MeasureResult {
@@ -61,4 +78,26 @@ export interface MeasureResult {
   reason: string;
   documents: string[];
   nextDate?: { date: string; label: string };
+  /** Какие ваши ответы повлияли на вывод. */
+  factors: Factor[];
+  /** Вопросы с ответом «Не знаю», от которых зависит вывод. */
+  unknowns: string[];
+  /** Что нужно изменить, чтобы мера стала подходящей (по одному ответу). */
+  whatIf: Suggestion[];
+}
+
+export interface DocCatalogItem {
+  id: string;
+  title: string;
+  where: string;
+  match: string[];
+}
+
+export interface PlanItem {
+  measureId: string;
+  title: string;
+  priority: 1 | 2 | 3;
+  action: string;
+  why: string;
+  date?: string;
 }
