@@ -165,3 +165,37 @@ describe("сроки", () => {
     expect(g.yes.length + g.maybe.length + g.later.length + g.no.length).toBe(M.length);
   });
 });
+
+import { build516n, FORM516N_SOURCE, MODE_LABEL } from "./forms/form516n";
+
+describe("формы", () => {
+  const v = { employerAddressee: "Директор ООО «Ромашка» Иванов И. И.", employee: "Бухгалтер Петрова А. А.", mode: "months" as const, dates: "5, 12 октября 2026 г.", days: "2", secondParent: "второй родитель не работает", sheets: "2", date: "02.10.2026" };
+  it("заявление 516н повторяет формулировки приказа", () => {
+    const d = build516n(v);
+    expect(d.title[0]).toBe("ЗАЯВЛЕНИЕ");
+    expect(d.intro).toContain("В соответствии со статьей 262 Трудового кодекса Российской Федерации прошу предоставить мне");
+    expect(d.options).toHaveLength(2);
+    expect(d.options[0].label).toBe(MODE_LABEL.months);
+    expect(d.options.map((o) => o.checked)).toEqual([true, false]);
+    expect(d.confirm).toBe("Достоверность представленных мною сведений подтверждаю.");
+    expect(d.attachments).toContain("на 2 листах прилагаю");
+    expect(d.source).toBe(FORM516N_SOURCE);
+    expect(d.source).toContain("516н");
+  });
+  it("пустые поля заменяются прочерками для рукописного заполнения", () => {
+    const d = build516n({ ...v, dates: "", days: "", secondParent: "" });
+    expect(d.dates).toMatch(/^_+$/);
+    expect(d.daysLine).toMatch(/в количестве _+ дней\./);
+  });
+  it("режим «подряд» отмечает второй вариант", () => {
+    expect(build516n({ ...v, mode: "inRow" }).options.map((o) => o.checked)).toEqual([false, true]);
+  });
+  it("у мер с памяткой есть данные формы, у допвыходных — форма 516н", () => {
+    for (const m of M.filter((x) => x.forms?.some((f) => f.kind === "memo"))) {
+      expect(m.form, m.id).toBeTruthy();
+      expect(m.form!.url, m.id).toMatch(/^https:\/\//);
+      expect(m.form!.steps.length, m.id).toBeGreaterThan(0);
+    }
+    expect(M.find((m) => m.id === "c1")!.forms![0].kind).toBe("form516n");
+  });
+});

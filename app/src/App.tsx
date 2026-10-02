@@ -2,13 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import measuresData from "./data/measures.json";
 import questionsData from "./data/questions.json";
 import { evaluate, groupByVerdict, visibleQuestions } from "./engine";
+import Form516n from "./forms/Form516n";
+import Memo from "./forms/Memo";
 import type { Answers, Measure, MeasureResult, Question, Verdict } from "./types";
 
 const MEASURES = measuresData as unknown as Measure[];
 const QUESTIONS = questionsData as unknown as Question[];
 const STORE_KEY = "posobie-helper:v1";
 
-type Stage = "intro" | "ask" | "result";
+type Stage = "intro" | "ask" | "result" | "form516n" | "memo";
 
 const VERDICT_TITLE: Record<Verdict, string> = {
   yes: "Вам положено",
@@ -38,6 +40,7 @@ export default function App() {
   const [save, setSave] = useState(false);
   const [big, setBig] = useState(false);
   const [contrast, setContrast] = useState(false);
+  const [memoId, setMemoId] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("big", big);
@@ -82,7 +85,16 @@ export default function App() {
           />
         )}
         {stage === "ask" && <Ask answers={answers} setAnswers={setAnswers} onDone={() => setStage("result")} onCancel={() => setStage("intro")} />}
-        {stage === "result" && <Result answers={answers} onBack={() => setStage("ask")} onRestart={() => { setAnswers({}); setStage("intro"); }} />}
+        {stage === "result" && (
+          <Result
+            answers={answers}
+            onBack={() => setStage("ask")}
+            onRestart={() => { setAnswers({}); setStage("intro"); }}
+            onOpenForm={(kind, id) => { setMemoId(id); setStage(kind === "form516n" ? "form516n" : "memo"); }}
+          />
+        )}
+        {stage === "form516n" && <Form516n onBack={() => setStage("result")} />}
+        {stage === "memo" && memoId && <Memo measure={MEASURES.find((m) => m.id === memoId)!} onBack={() => setStage("result")} />}
       </main>
       <footer className="foot">
         Информационный помощник, не юридическая консультация и не орган власти. Данные остаются в вашем браузере и никуда не отправляются.
@@ -168,7 +180,9 @@ function Ask(p: { answers: Answers; setAnswers: (a: Answers) => void; onDone: ()
   );
 }
 
-function Result({ answers, onBack, onRestart }: { answers: Answers; onBack: () => void; onRestart: () => void }) {
+type OpenForm = (kind: "form516n" | "memo", id: string) => void;
+
+function Result({ answers, onBack, onRestart, onOpenForm }: { answers: Answers; onBack: () => void; onRestart: () => void; onOpenForm: OpenForm }) {
   const results = useMemo(() => evaluate(MEASURES, QUESTIONS, answers), [answers]);
   const g = groupByVerdict(results);
   const upcoming = results.filter((r) => r.nextDate && r.verdict !== "no");
@@ -190,7 +204,7 @@ function Result({ answers, onBack, onRestart }: { answers: Answers; onBack: () =
         g[v].length ? (
           <div key={v}>
             <h2 className={`verdict ${v}`}>{VERDICT_TITLE[v]} ({g[v].length})</h2>
-            {g[v].map((r) => <MeasureCard key={r.measure.id} r={r} open={v === "yes"} />)}
+            {g[v].map((r) => <MeasureCard key={r.measure.id} r={r} open={v === "yes"} onOpenForm={onOpenForm} />)}
           </div>
         ) : null,
       )}
@@ -204,7 +218,7 @@ function Result({ answers, onBack, onRestart }: { answers: Answers; onBack: () =
   );
 }
 
-function MeasureCard({ r, open }: { r: MeasureResult; open: boolean }) {
+function MeasureCard({ r, open, onOpenForm }: { r: MeasureResult; open: boolean; onOpenForm: OpenForm }) {
   const m = r.measure;
   const [grp] = [GROUP_TITLE[m.group]];
   return (
@@ -219,6 +233,11 @@ function MeasureCard({ r, open }: { r: MeasureResult; open: boolean }) {
       <p><b>Куда обращаться:</b> {m.authority}</p>
       {m.apply.length > 0 && (
         <ul className="links">{m.apply.map((l) => <li key={l.url}><a href={l.url} target="_blank" rel="noreferrer noopener">{l.label}</a></li>)}</ul>
+      )}
+      {m.forms && (
+        <div className="row no-print">
+          {m.forms.map((f) => <button key={f.kind} onClick={() => onOpenForm(f.kind, m.id)}>{f.label}</button>)}
+        </div>
       )}
       {r.documents.length > 0 && (
         <>

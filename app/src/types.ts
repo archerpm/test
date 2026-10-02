@@ -46,6 +46,10 @@ export interface Measure {
   tips: string[];
   basis: string;
   checkedAt: string;
+  /** Ссылки на формы/памятки, которые сервис формирует для печати */
+  forms?: { kind: "form516n" | "memo"; label: string }[];
+  /** Памятка подачи в онлайн-форме (поля, вложения, сроки) — из чтения формы на mos.ru/Госуслугах */
+  form?: { title: string; url: string; steps: string[]; prepare: string[]; attachments: string[]; notes: string[] };
   /** Ежегодная дата, ближайшую можно посчитать по "сегодня" */
   annual?: { month: number; day: number; label: string };
 }
