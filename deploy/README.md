@@ -15,8 +15,9 @@
 
 **Сначала посмотрите, что будет сделано, ничего не меняя:**
 ```powershell
-.\deploy\ship.ps1 -Target root@IP -Preflight
+powershell -ExecutionPolicy Bypass -File .\deploy\ship.ps1 -Target root@IP -Preflight
 ```
+(Если Windows пишет «выполнение сценариев отключено», нужен именно этот вариант с `-ExecutionPolicy Bypass`: политика меняется только на один запуск, системная настройка остаётся прежней.)
 Выводится отчёт о сервере (nginx, порты, службы) и план изменений; изменения не вносятся. Затем обычный запуск без `-Preflight`. Порт сайта можно задать самому: `-WebPort 8090`.
 
 ## Что нужно на вашем компьютере
@@ -27,7 +28,7 @@
 ## Выкладка
 В PowerShell, из папки проекта:
 ```powershell
-.\deploy\ship.ps1 -Target root@IP_СЕРВЕРА
+powershell -ExecutionPolicy Bypass -File .\deploy\ship.ps1 -Target root@IP_СЕРВЕРА
 ```
 Linux/macOS/Git Bash: `./deploy/ship.sh root@IP_СЕРВЕРА`.
 

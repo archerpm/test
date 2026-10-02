@@ -21,6 +21,12 @@ done
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/app"
 
+if [ "$PREFLIGHT" = 1 ]; then
+  # осмотр сервера: приложение собирать не нужно
+  TMP="$(mktemp -d)"; B="$TMP/bundle"; mkdir -p "$B"; cp -r "$ROOT/deploy" "$B/deploy"
+  find "$B/deploy" -type f -exec sed -i 's/\r$//' {} +
+  tar -czf "$TMP/posobie-bundle.tgz" -C "$B" .
+else
 echo "== Сборка"
 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
 npm run typecheck
@@ -32,7 +38,9 @@ mkdir -p "$B/tools/src"
 cp -r dist "$B/dist"
 cp -r scripts "$B/tools/scripts"; cp -r src/data "$B/tools/src/data"; cp package.json "$B/tools/"
 cp -r "$ROOT/deploy" "$B/deploy"
+find "$B/deploy" -type f -exec sed -i 's/\r$//' {} +   # CRLF → LF
 tar -czf "$TMP/posobie-bundle.tgz" -C "$B" .
+fi
 echo "Пакет: $TMP/posobie-bundle.tgz ($(du -h "$TMP/posobie-bundle.tgz" | cut -f1))"
 [ "$BUNDLE_ONLY" = 1 ] && exit 0
 
