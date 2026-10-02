@@ -262,3 +262,5 @@ fieldset { border:1px solid var(--line); border-radius:12px; }
   .tabs { top:calc(88px + env(safe-area-inset-top, 0px)); }
 }
 @media print { .print-only { display:block; font-size:.85rem; margin:4px 0 0 2rem; } .views, .exportbox, .glossary { display:none; } .gdef { display:none; } .term { border:none; } }
+
+.savehint { margin-top: 14px; font-size: 14px; color: var(--muted, #5b6270); }

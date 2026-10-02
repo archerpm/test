@@ -36,6 +36,20 @@ const pd = await grab(/Скачать PDF/);
 ok(readFileSync(x).subarray(0, 2).toString() === "PK", "xlsx — zip");
 ok(readFileSync(pd).subarray(0, 4).toString() === "%PDF", "pdf");
 ok(x.endsWith(".xlsx") && pd.endsWith(".pdf"), "расширения");
+// ---- прогресс: сохранить → открыть заново → загрузить → сразу результат
+const js = await grab(/Сохранить прогресс \(JSON\)/);
+ok(js.endsWith(".json") && JSON.parse(readFileSync(js, "utf8")).v === 1, "json прогресса");
+await p.goto(url);
+await p.evaluate(() => localStorage.clear());
+await p.reload();
+await p.locator('input[type=file]').setInputFiles(js);
+await p.waitForSelector("text=Результат на");
+ok((await p.innerText("body")).includes("Положено"), "результат после загрузки");
+// битый файл
+await p.goto(url);
+writeFileSync(`${dir}/bad.json`, "{не json");
+await p.locator('input[type=file]').setInputFiles(`${dir}/bad.json`);
+ok(await p.getByRole("alert").isVisible(), "сообщение о битом файле");
 ok(!errs.length, "ошибки страницы: " + errs.join("; "));
 console.log("export OK", x, pd);
 await b.close();

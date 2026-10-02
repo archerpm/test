@@ -4,7 +4,7 @@ import { aggregateDocuments, buildPlan, evaluate, groupByVerdict, staleness, vis
 import Form516n from "./forms/Form516n";
 import Gloss from "./Gloss";
 import Memo from "./forms/Memo";
-import { loadStored, parseSaved, persist, serialize } from "./storage";
+import { downloadSaved, loadStored, parseSaved, persist, serialize } from "./storage";
 import { Calendar, Check, Chevron, Clock, Doc, External, Help, Info, Link, Lock, Minus, Shield } from "./Icons";
 import { UNKNOWN, type Answers, type Measure, type MeasureResult, type Verdict } from "./types";
 
@@ -87,9 +87,14 @@ export default function App() {
             setSave={setSave}
             onStart={() => { setAnswers({}); setProgress({}); setStage("ask"); }}
             onResume={() => { setAnswers(saved?.answers ?? {}); setProgress(saved?.progress ?? {}); setSave(true); setStage("ask"); }}
+            onLoadFile={(a, pr) => {
+              setAnswers(a); setProgress(pr);
+              // все вопросы отвечены — сразу к результату, иначе продолжаем опрос
+              setStage(visibleQuestions(QUESTIONS, a).every((q) => a[q.id] !== undefined) ? "result" : "ask");
+            }}
           />
         )}
-        {stage === "ask" && <Ask answers={answers} setAnswers={setAnswers} onDone={() => setStage("result")} onCancel={() => setStage("intro")} />}
+        {stage === "ask" && <Ask answers={answers} progress={progress} setAnswers={setAnswers} onDone={() => setStage("result")} onCancel={() => setStage("intro")} />}
         {stage === "result" && (
           <Result
             answers={answers}
@@ -122,7 +127,14 @@ function Glossary() {
   );
 }
 
-function Intro(p: { hasSaved: boolean; save: boolean; setSave: (v: boolean) => void; onStart: () => void; onResume: () => void }) {
+function Intro(p: { hasSaved: boolean; save: boolean; setSave: (v: boolean) => void; onStart: () => void; onResume: () => void; onLoadFile: (a: Answers, pr: Progress) => void }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [err, setErr] = useState("");
+  const loadFile = async (f: File) => {
+    const s = parseSaved(await f.text());
+    if (!s) { setErr("Не удалось прочитать файл: это не сохранённый прогресс сервиса."); return; }
+    p.onLoadFile(s.answers, s.progress);
+  };
   return (
     <section className="hero">
       <p className="eyebrow">Москва · ребёнок до 18 лет с инвалидностью</p>
@@ -131,7 +143,14 @@ function Intro(p: { hasSaved: boolean; save: boolean; setSave: (v: boolean) => v
       <div className="row">
         <button className="btn primary big-btn" onClick={p.onStart}>Пройти опрос</button>
         {p.hasSaved && <button className="btn" onClick={p.onResume}>Продолжить с сохранёнными ответами</button>}
+        {!EMBED && (
+          <>
+            <button className="btn" onClick={() => fileRef.current?.click()}>Загрузить прогресс из файла</button>
+            <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) await loadFile(f); e.target.value = ""; }} />
+          </>
+        )}
       </div>
+      {err && <p className="help" role="alert">{err}</p>}
       <label className="check">
         <input type="checkbox" checked={p.save} onChange={(e) => p.setSave(e.target.checked)} />
         <span>Запомнить ответы и отметки на этом устройстве. По умолчанию ничего не сохраняется.</span>
@@ -145,7 +164,7 @@ function Intro(p: { hasSaved: boolean; save: boolean; setSave: (v: boolean) => v
   );
 }
 
-function Ask(p: { answers: Answers; setAnswers: (a: Answers) => void; onDone: () => void; onCancel: () => void }) {
+function Ask(p: { answers: Answers; progress: Progress; setAnswers: (a: Answers) => void; onDone: () => void; onCancel: () => void }) {
   const visible = visibleQuestions(QUESTIONS, p.answers);
   const [idx, setIdx] = useState(0);
   const q = visible[Math.min(idx, visible.length - 1)];
@@ -209,6 +228,7 @@ function Ask(p: { answers: Answers; setAnswers: (a: Answers) => void; onDone: ()
         <button className="btn" onClick={prev}>Назад</button>
         <button className="btn primary" disabled={!answered} onClick={next}>{isLast ? "Показать результат" : "Далее"}</button>
       </div>
+      {!EMBED && <p className="savehint"><button className="link-btn" onClick={() => downloadSaved(p.answers, p.progress)}>Сохранить прогресс в файл</button> — чтобы продолжить позже на этом или другом устройстве</p>}
     </section>
   );
 }
@@ -490,14 +510,7 @@ function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: An
     setMsg("Ответы и отметки загружены.");
     setText("");
   };
-  const download = () => {
-    const url = URL.createObjectURL(new Blob([code], { type: "application/json" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "otvety-pomoshnik.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const download = () => downloadSaved(p.answers, p.progress);
   const save = (data: Uint8Array, name: string, type: string) => {
     const url = URL.createObjectURL(new Blob([data as BlobPart], { type }));
     const a = document.createElement("a");
@@ -520,10 +533,11 @@ function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: An
     {!EMBED && (
       <div className="exportbox no-print">
         <h3 className="group-title">Сохранить результат</h3>
-        <p className="help">Таблица для Excel и документ PDF: меры, план действий и список документов.</p>
+        <p className="help">Таблица для Excel и документ PDF: меры, план действий и список документов. Файл прогресса (JSON) позволит продолжить позже: на первом экране нажмите «Загрузить прогресс из файла».</p>
         <div className="row">
           <button className="btn sm" disabled={!!busy} onClick={() => exportAs("xlsx")}>{busy === "xlsx" ? "Готовлю…" : "Скачать Excel (xlsx)"}</button>
           <button className="btn sm" disabled={!!busy} onClick={() => exportAs("pdf")}>{busy === "pdf" ? "Готовлю…" : "Скачать PDF"}</button>
+          <button className="btn sm" onClick={() => downloadSaved(p.answers, p.progress)}>Сохранить прогресс (JSON)</button>
         </div>
         {exMsg && <p className="help" role="status">{exMsg}</p>}
       </div>

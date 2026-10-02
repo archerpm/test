@@ -50,3 +50,13 @@ export function persist(answers: Answers, progress: Record<string, boolean>): vo
     /* без сохранения всё работает */
   }
 }
+
+/** Скачивает ответы и отметки файлом на устройство. */
+export function downloadSaved(answers: Answers, progress: Record<string, boolean>): void {
+  const url = URL.createObjectURL(new Blob([serialize(answers, progress)], { type: "application/json" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `progress-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
