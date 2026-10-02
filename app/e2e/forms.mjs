@@ -7,7 +7,7 @@ const b = await chromium.launch({ executablePath: exe });
 const p = await b.newPage({ viewport: { width: 900, height: 1000 } });
 const errs = []; p.on("pageerror", (e) => errs.push(String(e)));
 await p.goto(url);
-await p.getByRole("button", { name: "Начать" }).click();
+await p.getByRole("button", { name: "Пройти опрос" }).click();
 const next = () => p.getByRole("button", { name: /Далее|Показать результат/ }).click();
 const ans = async (t) => { await p.getByRole("button", { name: t, exact: true }).click(); await next(); };
 await p.getByRole("spinbutton").fill("8"); await next();
@@ -21,13 +21,17 @@ await p.getByRole("button", { name: "Да", exact: true }).click(); // умее�
 await p.getByRole("button", { name: "Показать результат" }).click();
 await p.waitForSelector("text=Вам положено");
 // памятка подачи по федеральной выплате
-await p.locator("details", { hasText: "Федеральная выплата по уходу" }).first().getByRole("button", { name: "Памятка подачи" }).click();
+const fed = p.locator("details.measure", { hasText: "Федеральная выплата по уходу" }).first();
+await fed.locator("summary").click();
+await fed.getByRole("button", { name: "Памятка подачи" }).click();
 await p.waitForSelector("text=Памятка подачи: Федеральная выплата");
 const memo = await p.innerText("article.memo");
 if (!memo.includes("gosuslugi.ru/620286") || !memo.includes("Шаги формы")) throw new Error("памятка неполная");
 await p.getByRole("button", { name: /К результату/ }).click();
 // заявление 516н
-await p.locator("details", { hasText: "4 дополнительных оплачиваемых" }).first().getByRole("button", { name: /форма 516н/ }).click();
+const wk = p.locator("details.measure", { hasText: "4 дополнительных оплачиваемых" }).first();
+await wk.locator("summary").click();
+await wk.getByRole("button", { name: /форма 516н/ }).click();
 await p.getByLabel(/Кому/).fill("Директор ООО «Ромашка» Иванов И. И.");
 await p.getByLabel(/От кого/).fill("Бухгалтер Петрова А. А.");
 await p.getByLabel(/Даты предоставления/).fill("5, 12, 19, 26 октября 2026 г.");

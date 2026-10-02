@@ -7,7 +7,7 @@ const p = await b.newPage({ viewport: { width: 390, height: 844 } });
 const errs = [];
 p.on("pageerror", (e) => errs.push(String(e)));
 await p.goto(url);
-await p.getByRole("button", { name: "Начать" }).click();
+await p.getByRole("button", { name: "Пройти опрос" }).click();
 const answer = async (text) => { await p.getByRole("button", { name: text, exact: true }).click(); await p.getByRole("button", { name: /Далее|Показать результат/ }).click(); };
 await p.getByRole("spinbutton").fill("8");
 await p.getByRole("button", { name: "Далее" }).click();
