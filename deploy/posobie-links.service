@@ -8,6 +8,7 @@ Type=oneshot
 User=www-data
 WorkingDirectory=/opt/posobie-tools
 Environment=PLAIN=1
+Environment=NODE_EXTRA_CA_CERTS=@CAENV@
 # Не мешаем другим службам сервера: низкий приоритет, ограничения по процессору и памяти, только запись в каталог отчёта
 Nice=19
 CPUQuota=20%

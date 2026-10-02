@@ -27,7 +27,7 @@ async function check(url) {
     if (AUTH_HOSTS.test(new URL(res.url).host + new URL(res.url).pathname)) return { kind: "warn", note: "перенаправляет на вход" };
     return { kind: "ok", note: String(res.status) };
   } catch (e) {
-    return { kind: "warn", note: `не открылась (${e.name === "AbortError" ? "таймаут" : e.cause?.code ?? e.message})` };
+    return { kind: "warn", note: `не открылась (${e.name === "AbortError" ? "таймаут" : /CERT|SELF_SIGNED|LEAF/.test(e.cause?.code ?? "") ? `${e.cause.code}: сертификат российского УЦ, см. deploy/README.md` : [e.cause?.code, e.cause?.message].filter(Boolean).join(" ") || e.message})` };
   } finally {
     clearTimeout(t);
   }

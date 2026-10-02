@@ -142,9 +142,24 @@ if [ -n "$NEED_NODE" ]; then
 fi
 chmod -R a+rX /opt/posobie-tools
 
+# Корневой и промежуточный сертификаты Минцифры — только для проверки ссылок (NODE_EXTRA_CA_CERTS);
+# в системное хранилище сервера они НЕ добавляются. Отключить: RU_CA=0
+CA_FILE=/opt/posobie-tools/certs/russian-ca.pem; CAENV=""
+if [ "${RU_CA:-1}" = 1 ] && command -v curl >/dev/null && command -v openssl >/dev/null; then
+  log "Сертификаты российского УЦ (только для проверки ссылок)"
+  install -d /opt/posobie-tools/certs; CT="$(mktemp -d)"; OK=1
+  for f in russian_trusted_root_ca_pem.crt russian_trusted_sub_ca_pem.crt; do
+    curl -fsSL --max-time 30 "https://gu-st.ru/content/lending/$f" -o "$CT/$f" 2>/dev/null && openssl x509 -in "$CT/$f" -noout >/dev/null 2>&1 || { OK=0; break; }
+    echo "  $f: $(openssl x509 -in "$CT/$f" -noout -subject -fingerprint -sha256 | tr '\n' ' ')"
+  done
+  if [ "$OK" = 1 ]; then cat "$CT"/russian_trusted_*_ca_pem.crt > "$CA_FILE"; chmod 644 "$CA_FILE"; CAENV="$CA_FILE"; echo "  Сверьте отпечатки со страницей https://www.gosuslugi.ru/crt"
+  else warn "Не удалось скачать сертификаты УЦ: сайты на российском УЦ останутся предупреждениями в отчёте."; fi
+  rm -rf "$CT"
+fi
+
 if [ "$HAS_SYSTEMD" = 1 ] && [ -x "${NODE_BIN:-/nonexistent}" ]; then
   log "Еженедельная проверка ссылок (понедельник, 06:00 по Москве; часовой пояс сервера не меняется)"
-  sed "s#@NODE@#$NODE_BIN#g" "$B/deploy/posobie-links.service" > /etc/systemd/system/posobie-links.service
+  sed -e "s#@NODE@#$NODE_BIN#g" -e "s#@CAENV@#${CAENV}#g" "$B/deploy/posobie-links.service" > /etc/systemd/system/posobie-links.service
   install -m 644 "$B/deploy/posobie-links.timer" /etc/systemd/system/posobie-links.timer
   systemctl daemon-reload
   systemctl enable --now posobie-links.timer
@@ -161,14 +176,16 @@ else echo "ufw не включён — ничего не меняем"; [ "$DOMA
 # ---------------------------------------------------------------- самопроверка
 log "Самопроверка сайта"
 HDR="Host: ${DOMAIN/_/localhost}"
-code() { curl -s -o /dev/null -w '%{http_code}' -H "$HDR" "$@"; }
-echo "Главная страница:  HTTP $(code http://127.0.0.1:$LISTEN/)"
-echo "Несуществующая:    HTTP $(code http://127.0.0.1:$LISTEN/nope)  (ожидается 404)"
-echo "Заголовок CSP:     $(curl -sI -H "$HDR" http://127.0.0.1:$LISTEN/ | grep -ci '^content-security-policy') шт."
+SCHEME=http; ROOT="http://127.0.0.1:$LISTEN"; RES=()
+if [ "$DOMAIN" != "_" ] && [ -e "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then SCHEME=https; ROOT="https://$DOMAIN"; RES=(--resolve "$DOMAIN:443:127.0.0.1"); fi
+code() { curl -s -o /dev/null -w '%{http_code}' -H "$HDR" "${RES[@]}" "$@"; }
+echo "Главная страница:  HTTP $(code $ROOT/)"
+echo "Несуществующая:    HTTP $(code $ROOT/nope)  (ожидается 404)"
+echo "Заголовок CSP:     $(curl -sI -H "$HDR" "${RES[@]}" $ROOT/ | grep -ci '^content-security-policy') шт."
 
 if [ -x "${NODE_BIN:-/nonexistent}" ]; then
   log "Первая проверка ссылок с этого сервера (низкий приоритет)"
-  ( cd /opt/posobie-tools && PLAIN=1 nice -n 19 timeout 240 "$NODE_BIN" scripts/check-freshness.mjs && PLAIN=1 nice -n 19 timeout 240 "$NODE_BIN" scripts/check-links.mjs ) > /var/www/posobie-status/links.txt 2>&1 || true
+  ( cd /opt/posobie-tools && PLAIN=1 nice -n 19 timeout 240 "$NODE_BIN" scripts/check-freshness.mjs && PLAIN=1 NODE_EXTRA_CA_CERTS="$CAENV" nice -n 19 timeout 240 "$NODE_BIN" scripts/check-links.mjs ) > /var/www/posobie-status/links.txt 2>&1 || true
   chown www-data:www-data /var/www/posobie-status/links.txt 2>/dev/null || true
   head -25 /var/www/posobie-status/links.txt
 fi
@@ -183,7 +200,7 @@ echo "Новые порты:        ${NEW_PORTS:-нет}"
 if diff -q "$SNAP/before.rustpids" "$SNAP/after.rustpids" >/dev/null; then echo "RustDesk/Rust:      те же ($(wc -l < "$SNAP/after.rustpids") шт., не перезапускались)"; else warn "Список процессов RustDesk/Rust изменился — проверьте, что сервер удалённого доступа работает"; fi
 
 IP="$(hostname -I 2>/dev/null | awk '{print $1}')"
-if [ "$DOMAIN" != "_" ]; then BASE="http://$DOMAIN"; else BASE="http://${IP:-IP_сервера}:$LISTEN"; fi
+if [ "$DOMAIN" != "_" ]; then BASE="$SCHEME://$DOMAIN"; else BASE="http://${IP:-IP_сервера}:$LISTEN"; fi
 log "Готово"
 echo "Сайт:   $BASE/"
 echo "Отчёт:  $BASE/status/links.txt"
