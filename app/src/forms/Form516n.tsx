@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { build516n, type Form516nValues } from "./form516n";
+import { build516n, type Form516nValues } from "./doc516n";
 import { EMBED } from "../env";
-import { docToText } from "./form516n";
+import { docToText } from "./doc516n";
 
 const today = () => new Date().toLocaleDateString("ru-RU");
 

@@ -193,7 +193,7 @@ describe("сроки", () => {
   });
 });
 
-import { build516n, FORM516N_SOURCE, MODE_LABEL } from "./forms/form516n";
+import { build516n, FORM516N_SOURCE, MODE_LABEL } from "./forms/doc516n";
 
 describe("формы", () => {
   const v = { employerAddressee: "Директор ООО «Ромашка» Иванов И. И.", employee: "Бухгалтер Петрова А. А.", mode: "months" as const, dates: "5, 12 октября 2026 г.", days: "2", secondParent: "второй родитель не работает", sheets: "2", date: "02.10.2026" };
