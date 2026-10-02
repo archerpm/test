@@ -577,7 +577,7 @@ function MeasureCard({ r, progress, toggle, onOpenForm }: { r: MeasureResult; pr
         <span className="status">{VERDICT_ICON[r.verdict]()}</span>
         <span className="sum">
           <span className="mtitle">{m.title}{m.status === "check" && <span className="badge" title="Часть условий не подтверждена первоисточником">уточнить</span>}</span>
-          <span className="reason"><Gloss text={r.reason} /></span>
+          <span className="reason">{r.reason}</span>
         </span>
         <span className="chev"><Chevron size={20} /></span>
       </summary>

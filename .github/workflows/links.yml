@@ -1,0 +1,20 @@
+name: Проверка ссылок и свежести данных
+on:
+  schedule:
+    - cron: "0 6 * * 1" # каждый понедельник
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Свежесть данных
+        run: STRICT=1 npm run check:fresh
+      - name: Ссылки (падает только на 404/410; закрытые для зарубежных адресов сайты дают предупреждения)
+        run: npm run check:links

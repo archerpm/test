@@ -1,0 +1,16 @@
+{
+  "name": "Помощник по мерам поддержки",
+  "short_name": "Помощник",
+  "description": "Что положено семье с ребёнком-инвалидом в Москве: выплаты, льготы, документы, план действий",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf3f2",
+  "theme_color": "#0d6a6e",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

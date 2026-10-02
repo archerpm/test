@@ -1,0 +1,33 @@
+name: CI
+on:
+  push:
+    paths: ["app/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["app/**", ".github/workflows/ci.yml"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - name: Типы
+        run: npm run typecheck
+      - name: Юнит-тесты
+        run: npm test
+      - name: Сборка
+        run: npm run build
+      - name: Браузер для e2e
+        run: npx playwright install --with-deps chromium
+      - name: e2e и проверка доступности
+        run: |
+          npm run preview -- --port 4173 &
+          sleep 3
+          npm run test:e2e

@@ -1,8 +1,8 @@
 // e2e: «Не знаю», план, общий список документов, сохранение/перенос, словарик
-import { chromium } from "/opt/node22/lib/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 const url = process.env.URL ?? "http://localhost:4173/";
-const exe = process.env.CHROME ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
-const b = await chromium.launch({ executablePath: exe });
+const exe = process.env.CHROME; // не задан — Playwright использует свой Chromium (npx playwright install chromium)
+const b = await chromium.launch(exe ? { executablePath: exe } : {});
 const ctx = await b.newContext({ viewport: { width: 420, height: 900 } });
 await ctx.grantPermissions(["clipboard-read", "clipboard-write"], { origin: new URL(url).origin }).catch(() => {});
 const p = await ctx.newPage();

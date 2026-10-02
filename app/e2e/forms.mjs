@@ -1,9 +1,9 @@
 // e2e: работающий родитель → заявление 516н → PDF; памятка подачи
-import { chromium } from "/opt/node22/lib/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 const url = process.env.URL ?? "http://localhost:4173/";
-const exe = process.env.CHROME ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
+const exe = process.env.CHROME; // не задан — Playwright использует свой Chromium (npx playwright install chromium)
 const out = process.env.OUT ?? "/tmp/claude-0";
-const b = await chromium.launch({ executablePath: exe });
+const b = await chromium.launch(exe ? { executablePath: exe } : {});
 const p = await b.newPage({ viewport: { width: 900, height: 1000 } });
 const errs = []; p.on("pageerror", (e) => errs.push(String(e)));
 await p.goto(url);

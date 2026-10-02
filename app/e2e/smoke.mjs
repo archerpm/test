@@ -1,8 +1,8 @@
 // Дымовой e2e: проходит опрос эталонной семьи и проверяет результат. Запуск: npm run preview, затем node e2e/smoke.mjs
-import { chromium } from "/opt/node22/lib/node_modules/playwright/index.mjs";
+import { chromium } from "playwright";
 const url = process.env.URL ?? "http://localhost:4173/";
-const exe = process.env.CHROME ?? "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
-const b = await chromium.launch({ executablePath: exe });
+const exe = process.env.CHROME; // не задан — Playwright использует свой Chromium (npx playwright install chromium)
+const b = await chromium.launch(exe ? { executablePath: exe } : {});
 const p = await b.newPage({ viewport: { width: 390, height: 844 } });
 const errs = [];
 p.on("pageerror", (e) => errs.push(String(e)));
