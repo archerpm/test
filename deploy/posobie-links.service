@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=deploy
+User=www-data
 WorkingDirectory=/opt/posobie-tools
 Environment=PLAIN=1
 # Отчёт пишется во временный файл и подменяется целиком, чтобы читатель не видел недописанный
