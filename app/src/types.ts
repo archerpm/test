@@ -36,7 +36,8 @@ export interface Measure {
   group: "money" | "benefits" | "parents" | "excluded";
   title: string;
   authority: string;
-  apply: { label: string; url: string }[];
+  /** apply — страница, откуда подаётся заявление онлайн; info — описание процедуры (если онлайн-подачи нет или нужна инструкция) */
+  apply: { kind: "apply" | "info"; label: string; url: string }[];
   /** confirmed — подтверждено первоисточником; check — есть пункты, которые нужно уточнить */
   status: "confirmed" | "check";
   summary: string;

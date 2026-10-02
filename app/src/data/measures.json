@@ -6,10 +6,17 @@
   "authority": "СФР",
   "apply": [
    {
-    "label": "Доставка пенсии на Госуслугах",
+    "kind": "apply",
+    "label": "Подать заявление на Госуслугах («Доставка пенсии и социальных выплат СФР»)",
     "url": "https://www.gosuslugi.ru/600109/1/form"
    },
    {
+    "kind": "info",
+    "label": "Описание: социальная пенсия ребёнку-инвалиду (mos.ru)",
+    "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-oformit-socialnuyu-pensiyu-na-detey-invalidov/"
+   },
+   {
+    "kind": "info",
     "label": "Страница СФР",
     "url": "https://sfr.gov.ru/grazhdanam/invalidam/pensions/soc_pens_inv"
    }
@@ -54,11 +61,13 @@
   "authority": "СФР",
   "apply": [
    {
-    "label": "Отказ от набора соцуслуг (Госуслуги)",
+    "kind": "apply",
+    "label": "Подать заявление на Госуслугах («Отказ от набора социальных услуг»)",
     "url": "https://www.gosuslugi.ru/600116/1/form"
    },
    {
-    "label": "Страница НСУ",
+    "kind": "info",
+    "label": "Описание: набор социальных услуг (СФР)",
     "url": "https://sfr.gov.ru/grazhdanam/socialnaya_podderzhka/federal_beneficiaries/nsu/"
    }
   ],
@@ -100,11 +109,13 @@
   "authority": "СФР",
   "apply": [
    {
-    "label": "Заявление на Госуслугах",
+    "kind": "apply",
+    "label": "Подать заявление на Госуслугах (выплата по уходу)",
     "url": "https://www.gosuslugi.ru/620286/1/form"
    },
    {
-    "label": "Инструкция mos.ru",
+    "kind": "info",
+    "label": "Описание процедуры (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-oformit-ezhemesyachnuyu-federalnuyu-vyplatu-po-uhodu-za-rebenkom-invalidom/"
    }
   ],
@@ -242,15 +253,18 @@
   "authority": "ДТСЗН Москвы (расчёт — Соцказначейство)",
   "apply": [
    {
-    "label": "Заявление на mos.ru (родители)",
-    "url": "https://www.mos.ru/pgu2/landing/target/7700000000163130353/"
-   },
-   {
-    "label": "Форма заявления",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru (единая форма ДТСЗН)",
     "url": "https://www.mos.ru/pgu/ru/application/dszn/002801"
    },
    {
-    "label": "Инструкция",
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
+    "url": "https://www.mos.ru/pgu2/landing/target/7700000000163130353/"
+   },
+   {
+    "kind": "info",
+    "label": "Описание процедуры (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-oformit-ezhemesyachnuyu-moskovskuyu-vyplatu-po-uhodu-za-rebenkom-invalidom/"
    }
   ],
@@ -406,11 +420,18 @@
   "authority": "ДТСЗН Москвы",
   "apply": [
    {
-    "label": "Заявление на mos.ru",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru",
     "url": "https://www.mos.ru/pgu/ru/app/dszn/006101/"
    },
    {
-    "label": "Инструкция",
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
+    "url": "https://www.mos.ru/pgu2/landing/target/7700000000171770788"
+   },
+   {
+    "kind": "info",
+    "label": "Описание процедуры (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-oformit-doplatu-k-pensii-nerabotayuschemu-pensioneru/"
    }
   ],
@@ -504,11 +525,18 @@
   "authority": "ДТСЗН Москвы (Соцказначейство)",
   "apply": [
    {
-    "label": "Заявление на mos.ru",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru (единая форма ДТСЗН)",
+    "url": "https://www.mos.ru/pgu/ru/application/dszn/002801"
+   },
+   {
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
     "url": "https://www.mos.ru/pgu2/landing/target/7700000000204058424/"
    },
    {
-    "label": "Инструкция",
+    "kind": "info",
+    "label": "Описание процедуры (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-oformit-ezhemesyachnoe-posobie-v-svyazi-s-rozhdeniem-i-vospitaniem-rebenka/"
    }
   ],
@@ -603,11 +631,13 @@
   "authority": "Мэрия Москвы (mos.ru)",
   "apply": [
    {
-    "label": "Оформление карты москвича",
+    "kind": "apply",
+    "label": "Оформить карту москвича на mos.ru",
     "url": "https://www.mos.ru/pgu2/landing/karta_moskvicha"
    },
    {
-    "label": "Страница",
+    "kind": "info",
+    "label": "Описание: карта москвича ребёнка-инвалида",
     "url": "https://www.mos.ru/karta-moskvicha/tipy-derzhataley/deti-invalidy/"
    }
   ],
@@ -652,11 +682,13 @@
   "authority": "Мэрия Москвы (mos.ru)",
   "apply": [
    {
-    "label": "Оформление карты москвича",
+    "kind": "apply",
+    "label": "Оформить карту москвича на mos.ru",
     "url": "https://www.mos.ru/pgu2/landing/karta_moskvicha"
    },
    {
-    "label": "Страница",
+    "kind": "info",
+    "label": "Описание: карта москвича родителя",
     "url": "https://www.mos.ru/karta-moskvicha/tipy-derzhataley/roditeli-rebenka-invalida/"
    }
   ],
@@ -697,15 +729,18 @@
   "authority": "ДТСЗН / Соцказначейство Москвы",
   "apply": [
    {
-    "label": "Заявление на mos.ru",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru (скидка на ЖКУ)",
     "url": "https://www.mos.ru/pgu2/105201"
    },
    {
-    "label": "Страница услуги",
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
     "url": "https://www.mos.ru/pgu2/landing/target/7700000000208204153/"
    },
    {
-    "label": "Инструкция",
+    "kind": "info",
+    "label": "Описание процедуры (mos.ru)",
     "url": "https://www.mos.ru/otvet-dom-i-dvor/kak-poluchit-skidku-na-oplatu-zhilogo-pomescheniya-i-zhku/"
    }
   ],
@@ -802,11 +837,18 @@
   "authority": "ДТСЗН / Соцказначейство; Фонд капремонта",
   "apply": [
    {
-    "label": "Информация о капремонте",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru (льгота на капремонт оформляется вместе с ЖКУ)",
+    "url": "https://www.mos.ru/pgu2/105201"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: что нужно знать о капремонте (mos.ru)",
     "url": "https://www.mos.ru/otvet-dom-i-dvor/chto-nado-znat-o-kapremonte/"
    },
    {
-    "label": "Сведения Фонда",
+    "kind": "info",
+    "label": "Получить сведения Фонда капитального ремонта",
     "url": "https://www.mos.ru/pgu2/landing/1117"
    }
   ],
@@ -865,11 +907,13 @@
   "authority": "Департамент образования Москвы",
   "apply": [
    {
-    "label": "Заявление на mos.ru",
+    "kind": "apply",
+    "label": "Подать заявление на mos.ru (питание в школе)",
     "url": "https://www.mos.ru/pgu/ru/application/dogm/100101/"
    },
    {
-    "label": "Страница услуги",
+    "kind": "info",
+    "label": "Описание услуги (mos.ru)",
     "url": "https://www.mos.ru/pgu/ru/service/lgotnoe-pitanie/"
    }
   ],
@@ -927,11 +971,13 @@
   "authority": "ГБУ «Мосавтосантранс»",
   "apply": [
    {
-    "label": "Регистрация в реестре",
+    "kind": "apply",
+    "label": "Зарегистрироваться в реестре на mos.ru",
     "url": "https://www.mos.ru/pgu2/108801"
    },
    {
-    "label": "Информация",
+    "kind": "info",
+    "label": "Описание: как пользоваться социальным такси",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-polzovatsya-socialnym-taksi/"
    }
   ],
@@ -982,11 +1028,13 @@
   "authority": "Госуслуги / ГКУ «АМПП»",
   "apply": [
    {
-    "label": "Бесплатная парковка (Госуслуги)",
+    "kind": "apply",
+    "label": "Госуслуги: «Оформить бесплатную парковку» (раздел для инвалидов)",
     "url": "https://www.gosuslugi.ru/invalidam/transport"
    },
    {
-    "label": "Справка mos.ru",
+    "kind": "info",
+    "label": "Описание: льготное парковочное разрешение (mos.ru)",
     "url": "https://www.mos.ru/otvet-transport/kak-oformit-lgotnoe-razreshenie-na-parkovku/"
    }
   ],
@@ -1029,7 +1077,8 @@
   "authority": "Врач медорганизации ДЗМ",
   "apply": [
    {
-    "label": "Как получить",
+    "kind": "info",
+    "label": "Описание: как получить льготные лекарства (mos.ru)",
     "url": "https://www.mos.ru/otvet-zdorovie/kak-i-gde-poluchit-lgotnye-lekarstva/"
    }
   ],
@@ -1071,11 +1120,13 @@
   "authority": "СФР; МГЦР",
   "apply": [
    {
-    "label": "Подача заявки на ТСР",
+    "kind": "info",
+    "label": "Описание: как подать заявку на ТСР (Госуслуги; кнопка «Подать заявку» на странице)",
     "url": "https://www.gosuslugi.ru/invalidam/rehabilitation"
    },
    {
-    "label": "Московский центр реабилитации",
+    "kind": "info",
+    "label": "Московский городской центр реабилитации",
     "url": "https://mgcr-online.ru/"
    }
   ],
@@ -1118,16 +1169,24 @@
   "authority": "ДТСЗН Москвы (москвичи) / СФР",
   "apply": [
    {
-    "label": "Постановка на учёт на mos.ru (москвичам)",
-    "url": "https://www.mos.ru/pgu2/landing/target/7700000010000250370/"
-   },
-   {
-    "label": "Форма заявления",
+    "kind": "apply",
+    "label": "Встать на учёт на mos.ru (москвичам)",
     "url": "https://www.mos.ru/pgu2/006901"
    },
    {
-    "label": "Страница НСУ СФР",
-    "url": "https://sfr.gov.ru/grazhdanam/socialnaya_podderzhka/federal_beneficiaries/nsu/"
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
+    "url": "https://www.mos.ru/pgu2/landing/target/7700000010000250370/"
+   },
+   {
+    "kind": "apply",
+    "label": "Госуслуги: путёвка на СКЛ (для жителей других регионов)",
+    "url": "https://www.gosuslugi.ru/611287/1/form"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: санаторно-курортное лечение (СФР)",
+    "url": "https://sfr.gov.ru/grazhdanam/socialnaya_podderzhka/federal_beneficiaries/sk_treatment/~8279"
    }
   ],
   "status": "check",
@@ -1180,16 +1239,19 @@
   "authority": "Мосгортур",
   "apply": [
    {
-    "label": "Путёвки на отдых",
+    "kind": "apply",
+    "label": "Заявление на сертификат (форма mos.ru; открыта только в период кампании)",
+    "url": "https://www.mos.ru/pgu/ru/app/dk/110301/"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: путёвки на отдых и оздоровление",
     "url": "https://www.mos.ru/pgu2/landing/7911"
    },
    {
-    "label": "Сертификат на отдых",
+    "kind": "info",
+    "label": "Описание: льготный сертификат на отдых",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-poluchit-lgotnyy-sertifikat-na-otdyh/"
-   },
-   {
-    "label": "Форма заявления",
-    "url": "https://www.mos.ru/pgu/ru/app/dk/110301/"
    }
   ],
   "status": "check",
@@ -1255,15 +1317,18 @@
   "authority": "МОСГОРСПОРТ; Москомспорт",
   "apply": [
    {
-    "label": "Запись в секции",
+    "kind": "apply",
+    "label": "Записаться в секцию на sport.mos.ru (затем — лично в управление)",
     "url": "https://sport.mos.ru/sections/"
    },
    {
-    "label": "Группа плавания 11555",
+    "kind": "apply",
+    "label": "Группа плавания 11555 (Медынский)",
     "url": "https://sport.mos.ru/sections/11555"
    },
    {
-    "label": "Документы и формы",
+    "kind": "info",
+    "label": "Правила приёма, формы и документы (МОСГОРСПОРТ)",
     "url": "https://section.mosgorsport.ru/"
    }
   ],
@@ -1317,15 +1382,18 @@
   "authority": "ЦПМПК Москвы",
   "apply": [
    {
-    "label": "Запись на ЦПМПК",
-    "url": "https://www.mos.ru/pgu2/landing/cpmpk"
-   },
-   {
-    "label": "Форма записи",
+    "kind": "apply",
+    "label": "Записаться на ЦПМПК на mos.ru",
     "url": "https://www.mos.ru/pgu/ru/application/dogm/063401"
    },
    {
-    "label": "Сайт центра",
+    "kind": "apply",
+    "label": "Страница услуги на mos.ru",
+    "url": "https://www.mos.ru/pgu2/landing/cpmpk"
+   },
+   {
+    "kind": "info",
+    "label": "Сайт ЦПМПК: порядок и документы",
     "url": "https://gppc.ru/czpmpk/"
    }
   ],
@@ -1381,11 +1449,13 @@
   "authority": "МФЦ; ДТСЗН",
   "apply": [
    {
-    "label": "Электронный соцсертификат",
+    "kind": "info",
+    "label": "Описание: электронный социальный сертификат (mos.ru)",
     "url": "https://www.mos.ru/otvet-socialnaya-podderjka/kak-polzovatsya-socialnym-sertifikatom/"
    },
    {
-    "label": "Центр «Роза ветров» (Ю. Бутово)",
+    "kind": "info",
+    "label": "Центр «Роза ветров» (Южное Бутово): карточка ДТСЗН",
     "url": "https://dszn.ru/department/subordinate/1604"
    }
   ],
@@ -1435,7 +1505,8 @@
   "authority": "Работодатель (оплачивает СФР)",
   "apply": [
    {
-    "label": "Информация СФР",
+    "kind": "info",
+    "label": "Описание: порядок предоставления допвыходных (СФР)",
     "url": "https://sfr.gov.ru/grazhdanam/socialnoe_strahovanie/dop_vyhodnye/"
    }
   ],
@@ -1499,12 +1570,14 @@
   "authority": "Работодатель / ИФНС",
   "apply": [
    {
-    "label": "Страница ФНС",
-    "url": "https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/nalog_vichet/standart_nv/"
+    "kind": "apply",
+    "label": "Личный кабинет налогоплательщика (вычет через ИФНС)",
+    "url": "https://lkfl2.nalog.ru/lkfl/"
    },
    {
-    "label": "Личный кабинет налогоплательщика",
-    "url": "https://lkfl2.nalog.ru/lkfl/"
+    "kind": "info",
+    "label": "Описание: стандартные налоговые вычеты (ФНС)",
+    "url": "https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/nalog_vichet/standart_nv/"
    }
   ],
   "status": "confirmed",
@@ -1568,8 +1641,14 @@
   "authority": "ИФНС",
   "apply": [
    {
-    "label": "Личный кабинет налогоплательщика",
+    "kind": "apply",
+    "label": "Личный кабинет налогоплательщика (заявление на вычет)",
     "url": "https://lkfl2.nalog.ru/lkfl/"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: налоговые вычеты (ФНС)",
+    "url": "https://www.nalog.gov.ru/rn77/taxation/taxes/ndfl/nalog_vichet/"
    }
   ],
   "status": "confirmed",
@@ -1614,12 +1693,14 @@
   "authority": "ИФНС",
   "apply": [
    {
-    "label": "Заявление о льготе (страница ФНС)",
-    "url": "https://www.nalog.gov.ru/rn77/fl/pay_taxes/flat/privilege/"
+    "kind": "apply",
+    "label": "Личный кабинет налогоплательщика (заявление о льготе)",
+    "url": "https://lkfl2.nalog.ru/lkfl/"
    },
    {
-    "label": "Личный кабинет налогоплательщика",
-    "url": "https://lkfl2.nalog.ru/lkfl/"
+    "kind": "info",
+    "label": "Описание: как оформить льготу по налогу (ФНС Москвы)",
+    "url": "https://www.nalog.gov.ru/rn77/fl/pay_taxes/flat/privilege/"
    }
   ],
   "status": "confirmed",
@@ -1677,7 +1758,13 @@
   "authority": "ИФНС",
   "apply": [
    {
-    "label": "Заявление о льготе (страница ФНС)",
+    "kind": "apply",
+    "label": "Личный кабинет налогоплательщика (заявление о льготе)",
+    "url": "https://lkfl2.nalog.ru/lkfl/"
+   },
+   {
+    "kind": "info",
+    "label": "Описание: как оформить льготу по налогу (ФНС Москвы)",
     "url": "https://www.nalog.gov.ru/rn77/fl/pay_taxes/flat/privilege/"
    }
   ],
@@ -1718,12 +1805,14 @@
   "authority": "СФР",
   "apply": [
    {
-    "label": "Условия (Госуслуги)",
-    "url": "https://www.gosuslugi.ru/invalidam/transport"
+    "kind": "info",
+    "label": "Описание условий и порядка: компенсация ОСАГО (СФР)",
+    "url": "https://sfr.gov.ru/grazhdanam/invalidam/vyplaty_i_lgoty/kompensaciya_stoimostipolisa_OSAGO/"
    },
    {
-    "label": "Страница СФР",
-    "url": "https://sfr.gov.ru/grazhdanam/invalidam/soc_vip_inv/kompensaciya_stoimostipolisa_OSAGO/"
+    "kind": "info",
+    "label": "Госуслуги: раздел «Транспорт» для инвалидов (заявление — в нём или в СФР/МФЦ)",
+    "url": "https://www.gosuslugi.ru/invalidam/transport"
    }
   ],
   "status": "confirmed",
@@ -1777,7 +1866,8 @@
   "authority": "СФР",
   "apply": [
    {
-    "label": "Страница СФР",
+    "kind": "info",
+    "label": "Описание и порядок обращения: досрочная пенсия родителям (СФР; заявление — Госуслуги, СФР или МФЦ)",
     "url": "https://sfr.gov.ru/grazhdanam/pensionnoe_obespechenie/strahovaya_pensiya_po_starosti/dosrochnaya/roditelyam_invalidov_s_detstva/"
    }
   ],

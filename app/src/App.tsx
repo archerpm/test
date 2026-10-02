@@ -218,6 +218,31 @@ function Result({ answers, onBack, onRestart, onOpenForm }: { answers: Answers; 
   );
 }
 
+function Links({ links }: { links: Measure["apply"] }) {
+  const apply = links.filter((l) => l.kind === "apply");
+  const info = links.filter((l) => l.kind === "info");
+  if (links.length === 0) return null;
+  const a = (l: Measure["apply"][number]) => <a href={l.url} target="_blank" rel="noreferrer noopener">{l.label}</a>;
+  return (
+    <div className="links-box">
+      {apply.length > 0 ? (
+        <>
+          <h3>Подать заявление онлайн</h3>
+          <ul className="links apply">{apply.map((l) => <li key={l.url}>{a(l)}</li>)}</ul>
+        </>
+      ) : (
+        <p className="no-online"><b>Онлайн-подача не подтверждена</b> — процедура описана на страницах ниже (обычно: лично, через работодателя, врача или многофункциональный центр).</p>
+      )}
+      {info.length > 0 && (
+        <>
+          <h3>Описание процедуры</h3>
+          <ul className="links">{info.map((l) => <li key={l.url}>{a(l)}</li>)}</ul>
+        </>
+      )}
+    </div>
+  );
+}
+
 function MeasureCard({ r, open, onOpenForm }: { r: MeasureResult; open: boolean; onOpenForm: OpenForm }) {
   const m = r.measure;
   const [grp] = [GROUP_TITLE[m.group]];
@@ -231,9 +256,7 @@ function MeasureCard({ r, open, onOpenForm }: { r: MeasureResult; open: boolean;
       <p className="reason">{r.reason}</p>
       <p>{m.summary}</p>
       <p><b>Куда обращаться:</b> {m.authority}</p>
-      {m.apply.length > 0 && (
-        <ul className="links">{m.apply.map((l) => <li key={l.url}><a href={l.url} target="_blank" rel="noreferrer noopener">{l.label}</a></li>)}</ul>
-      )}
+      <Links links={m.apply} />
       {m.forms && (
         <div className="row no-print">
           {m.forms.map((f) => <button key={f.kind} onClick={() => onOpenForm(f.kind, m.id)}>{f.label}</button>)}

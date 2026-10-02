@@ -31,7 +31,7 @@ progress { width:100%; height:8px; }
 .badge { font-size:.8rem; border:1px solid var(--maybe); color:var(--maybe); border-radius:6px; padding:0 6px; }
 .reason { font-weight:600; }
 .docs { list-style:none; padding-left:0; } .docs li { margin:4px 0; }
-.links a { color:var(--accent); }
+.links a { color:var(--accent); } .links.apply a { font-weight:600; } .no-online { border-left:4px solid var(--maybe); padding-left:10px; }
 .foot { color:var(--muted); font-size:.85rem; margin:24px 0 8px; }
 .fields { display:flex; flex-direction:column; gap:12px; }
 .fields label { display:flex; flex-direction:column; gap:4px; font-weight:600; }

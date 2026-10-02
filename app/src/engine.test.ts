@@ -32,6 +32,18 @@ describe("данные", () => {
     expect(new Set(Q.map((q) => q.id)).size).toBe(Q.length);
     for (const m of M) for (const l of m.apply) expect(l.url, m.id).toMatch(/^https:\/\//);
   });
+  it("у каждой меры (кроме «не положено») есть ссылка на подачу или описание процедуры", () => {
+    for (const m of M.filter((x) => x.group !== "excluded")) {
+      expect(m.apply.length, m.id).toBeGreaterThan(0);
+      for (const l of m.apply) expect(["apply", "info"], m.id).toContain(l.kind);
+      // если онлайн-подачи нет — должна быть ссылка с описанием
+      if (!m.apply.some((l) => l.kind === "apply")) expect(m.apply.some((l) => l.kind === "info"), m.id).toBe(true);
+    }
+  });
+  it("ссылки не повторяются внутри меры и нет устаревшего адреса СФР по ОСАГО", () => {
+    for (const m of M) expect(new Set(m.apply.map((l) => l.url)).size, m.id).toBe(m.apply.length);
+    expect(JSON.stringify(M)).not.toContain("soc_vip_inv");
+  });
   it("последнее правило каждой меры — без условия (запасное)", () => {
     for (const m of M) expect(m.eligibility[m.eligibility.length - 1].when, m.id).toBeUndefined();
   });
