@@ -1,0 +1,12 @@
+[Unit]
+Description=Проверка ссылок и свежести данных сервиса «Помощник по мерам поддержки»
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=deploy
+WorkingDirectory=/opt/posobie-tools
+Environment=PLAIN=1
+# Отчёт пишется во временный файл и подменяется целиком, чтобы читатель не видел недописанный
+ExecStart=/bin/sh -c '{ date "+Проверка: %%Y-%%m-%%d %%H:%%M (Москва)"; node scripts/check-freshness.mjs; node scripts/check-links.mjs; } > /var/www/posobie-status/links.txt.new 2>&1; mv /var/www/posobie-status/links.txt.new /var/www/posobie-status/links.txt'

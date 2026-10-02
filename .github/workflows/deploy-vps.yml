@@ -1,0 +1,36 @@
+name: Выкладка на VPS
+on:
+  push:
+    branches: [main]
+    paths: ["app/**"]
+  workflow_dispatch:
+jobs:
+  deploy:
+    # выполняется только если в Variables репозитория задано DEPLOY_VPS=true (и добавлены секреты VPS_*)
+    if: ${{ vars.DEPLOY_VPS == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: SSH-ключ
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "${{ secrets.VPS_PORT || 22 }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+      - name: Выкладка
+        run: |
+          SSH="ssh -i ~/.ssh/id_deploy -p ${{ secrets.VPS_PORT || 22 }}"
+          T="${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}"
+          rsync -az --delete -e "$SSH" dist/ "$T:/var/www/posobie/"
+          rsync -az --delete -e "$SSH" --relative scripts src/data package.json "$T:/opt/posobie-tools/"

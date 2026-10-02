@@ -4,6 +4,9 @@ import App from "./App";
 import "./styles.css";
 import { EMBED } from "./env";
 
+// В пробной версии на claude.ai шрифты подключает страница-обёртка; в обычной сборке — свои файлы
+if (!EMBED) import("./fonts");
+
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
