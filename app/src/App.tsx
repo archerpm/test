@@ -9,6 +9,7 @@ import { Calendar, Check, Chevron, Clock, Doc, External, Help, Info, Link, Lock,
 import { UNKNOWN, type Answers, type Measure, type MeasureResult, type Verdict } from "./types";
 
 import { EMBED } from "./env";
+import { buildReport, type Table } from "./report";
 
 type Progress = Record<string, boolean>;
 type View = "measures" | "plan" | "docs";
@@ -365,7 +366,7 @@ function Result(p: {
         </>
       )}
 
-      <ExportPanel answers={answers} progress={progress} onImport={p.onImport} />
+      <ExportPanel answers={answers} progress={progress} onImport={p.onImport} getTables={() => buildReport(results, plan, docs, progress)} />
     </section>
   );
 }
@@ -466,9 +467,11 @@ function DocsView(p: {
   );
 }
 
-function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: Answers, pr: Progress) => void }) {
+function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: Answers, pr: Progress) => void; getTables: () => Table[] }) {
   const [text, setText] = useState("");
   const [msg, setMsg] = useState("");
+  const [busy, setBusy] = useState("");
+  const [exMsg, setExMsg] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const code = useMemo(() => serialize(p.answers, p.progress), [p.answers, p.progress]);
 
@@ -495,7 +498,36 @@ function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: An
     a.click();
     URL.revokeObjectURL(url);
   };
+  const save = (data: Uint8Array, name: string, type: string) => {
+    const url = URL.createObjectURL(new Blob([data as BlobPart], { type }));
+    const a = document.createElement("a");
+    a.href = url; a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const stamp = new Date().toISOString().slice(0, 10);
+  const exportAs = async (kind: "xlsx" | "pdf") => {
+    setBusy(kind); setExMsg("");
+    try {
+      const tables = p.getTables();
+      if (kind === "xlsx") save((await import("./exportXlsx")).buildXlsx(tables), `rezultat-${stamp}.xlsx`, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      else save(await (await import("./exportPdf")).buildPdf(tables, new Date().toLocaleDateString("ru-RU")), `rezultat-${stamp}.pdf`, "application/pdf");
+      setExMsg("Файл сохранён.");
+    } catch { setExMsg("Не удалось создать файл. Попробуйте ещё раз или воспользуйтесь печатью."); }
+    setBusy("");
+  };
   return (
+    <>
+    {!EMBED && (
+      <div className="exportbox no-print">
+        <h3 className="group-title">Сохранить результат</h3>
+        <p className="help">Таблица для Excel и документ PDF: меры, план действий и список документов.</p>
+        <div className="row">
+          <button className="btn sm" disabled={!!busy} onClick={() => exportAs("xlsx")}>{busy === "xlsx" ? "Готовлю…" : "Скачать Excel (xlsx)"}</button>
+          <button className="btn sm" disabled={!!busy} onClick={() => exportAs("pdf")}>{busy === "pdf" ? "Готовлю…" : "Скачать PDF"}</button>
+        </div>
+        {exMsg && <p className="help" role="status">{exMsg}</p>}
+      </div>
+    )}
     <details className="exportbox no-print">
       <summary>Сохранить или перенести ответы</summary>
       <p className="help">Ответы нигде не хранятся, кроме вашего браузера. Чтобы продолжить на другом устройстве, скопируйте код и вставьте его там в поле ниже.</p>
@@ -516,6 +548,7 @@ function ExportPanel(p: { answers: Answers; progress: Progress; onImport: (a: An
       <div className="row"><button className="btn sm" disabled={!text.trim()} onClick={() => load(text)}>Загрузить</button></div>
       {msg && <p className="help" role="status">{msg}</p>}
     </details>
+    </>
   );
 }
 
