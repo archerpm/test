@@ -140,12 +140,28 @@ describe("жильё, регион, авто", () => {
     expect(r.a3.verdict).toBe("yes");
     expect(r.a1.verdict).toBe("yes");
   });
-  it("автомобиль: ИПРА → ОСАГО; ≤200 л. с. → транспортный налог; > 200 — нет", () => {
-    const r = run({ ...base, car: true, carHp200: false, carIpra: true });
+  it("свой автомобиль в Москве: ИПРА → ОСАГО; ≤200 л. с. → транспортный налог; парковка", () => {
+    const own = { ...base, car: true, carOwner: "self", carMoscow: true, carInsured: true, carHp200: false, carIpra: true };
+    const r = run(own);
     expect(r.c6.verdict).toBe("yes");
     expect(r.c4.verdict).toBe("yes");
     expect(r.b7.verdict).toBe("yes");
-    expect(run({ ...base, car: true, carHp200: true, carIpra: false }).c4.verdict).toBe("no");
+    expect(run({ ...own, carHp200: true }).c4.verdict).toBe("no");
+  });
+  it("автомобиль бывшего супруга на учёте не в Москве: налог — не ваш, ОСАГО — только страхователю, парковка — возможна", () => {
+    const ex = { ...base, car: true, carOwner: "other", carMoscow: false, carInsured: false, carHp200: false, carIpra: true };
+    const r = run(ex);
+    expect(r.c4.verdict).toBe("no");
+    expect(r.c4.reason).toMatch(/собственник/);
+    expect(r.c6.verdict).toBe("maybe");
+    expect(r.c6.reason).toMatch(/страхователь/);
+    expect(r.b7.verdict).toBe("yes");
+    expect(r.b7.documents.join(" ")).toMatch(/не ваш/);
+  });
+  it("свой автомобиль на учёте не в Москве: московская льгота — «уточнить»", () => {
+    const r = run({ ...base, car: true, carOwner: "self", carMoscow: false, carInsured: true, carHp200: false, carIpra: true });
+    expect(r.c4.verdict).toBe("maybe");
+    expect(r.c6.verdict).toBe("yes");
   });
   it("малообеспеченная семья: пособие 553-ПП и адресная помощь возможны", () => {
     const r = run({ ...base, lowIncome: true });
