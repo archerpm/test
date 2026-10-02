@@ -56,6 +56,16 @@ else
     [ -n "$LISTEN" ] || { warn "Не нашёл свободный порт в 8088–8120."; exit 1; }
   fi
 fi
+# если указан домен — проверяем, что он уже указывает на этот сервер (иначе Let's Encrypt откажет, а лимиты на ошибки строгие)
+DNS_OK=""; DNS_MSG=""
+if [ "$DOMAIN" != "_" ]; then
+  RES="$(getent ahostsv4 "$DOMAIN" 2>/dev/null | awk '{print $1}' | sort -u | tr '\n' ' ' || true)"
+  if [ -z "$RES" ]; then DNS_MSG="домен $DOMAIN пока не найден в DNS (создайте A-запись на IP этого сервера и подождите)"
+  elif hostname -I 2>/dev/null | tr ' ' '\n' | grep -qxF "$(echo $RES | awk '{print $1}')"; then DNS_OK=1; DNS_MSG="домен $DOMAIN указывает на этот сервер ($RES)"
+  else DNS_MSG="домен $DOMAIN указывает на $RES, а не на этот сервер ($(hostname -I | awk '{print $1}'))"; fi
+  [ "${SKIP_DNS_CHECK:-0}" = 1 ] && DNS_OK=1   # для серверов за NAT, где локальный IP отличается от публичного
+  echo "DNS:          $DNS_MSG"
+fi
 NEED_NODE=""; command -v node >/dev/null && node -e 'process.exit(parseInt(process.versions.node)>=18?0:1)' 2>/dev/null || NEED_NODE=1
 
 log "План изменений"
@@ -106,7 +116,9 @@ reload_nginx
 sleep 1
 if ! curl -s -o /dev/null -H "Host: ${DOMAIN/_/localhost}" "http://127.0.0.1:$LISTEN/"; then rollback; warn "Сайт не отвечает на порту $LISTEN, откат выполнен."; exit 1; fi
 
-if [ "${CERTBOT:-0}" = 1 ] && [ "$DOMAIN" != "_" ]; then
+if [ "${CERTBOT:-0}" = 1 ] && [ "$DOMAIN" != "_" ] && [ -z "$DNS_OK" ]; then
+  warn "HTTPS пропущен: $DNS_MSG. Сайт работает по http; после настройки DNS повторите команду с тем же -Domain и -CertbotEmail."
+elif [ "${CERTBOT:-0}" = 1 ] && [ "$DOMAIN" != "_" ]; then
   log "HTTPS (Let's Encrypt)"
   command -v certbot >/dev/null || apt-get install -y --no-upgrade certbot python3-certbot-nginx
   certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos -m "${EMAIL:?Укажите EMAIL для сертификата}" --redirect

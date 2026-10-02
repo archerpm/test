@@ -1,4 +1,4 @@
-# Сборка и выкладка на VPS одной командой (Windows PowerShell). Из корня репозитория:
+﻿# Сборка и выкладка на VPS одной командой (Windows PowerShell). Из корня репозитория:
 #   .\deploy\ship.ps1 -Target root@IP [-Identity путь_к_ключу] [-Port 22] [-Domain example.ru] [-WebPort 8088] [-Preflight] [-CertbotEmail me@mail.ru] [-BundleOnly] [-SkipTests]
 # Пароль или ключ спрашивает ssh в вашем окне. Скрипт ничего не сохраняет и не отправляет никуда, кроме вашего сервера.
 # Если Windows запрещает запуск скриптов, запускайте так (политика меняется только на этот запуск):
