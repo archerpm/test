@@ -27,10 +27,16 @@ export function buildReport(
   progress: Record<string, boolean>,
 ): Table[] {
   const mark = (v: boolean) => (v ? "да" : "нет");
-  const measures = ORDER.flatMap((v) => results.filter((r) => r.verdict === v)).map((r) => {
+  const got = (r: MeasureResult) => r.verdict !== "no" && !!progress[`got:${r.measure.id}`];
+  const sorted = [
+    ...ORDER.slice(0, 3).flatMap((v) => results.filter((r) => r.verdict === v && !got(r))),
+    ...results.filter(got),
+    ...results.filter((r) => r.verdict === "no"),
+  ];
+  const measures = sorted.map((r) => {
     const link = r.measure.apply.find((l) => l.kind === "apply") ?? r.measure.apply[0];
     return [
-      VERDICT_LABEL[r.verdict],
+      got(r) ? "Уже получено" : VERDICT_LABEL[r.verdict],
       r.measure.title,
       r.measure.authority,
       r.reason,

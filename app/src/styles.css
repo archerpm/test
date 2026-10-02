@@ -114,7 +114,7 @@ button:disabled { opacity:.45; cursor:not-allowed; }
 .deadlines li span { display:flex; flex-direction:column; min-width:0; }
 .deadlines small { color:var(--muted); }
 
-.tabs { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin:0 0 20px; position:sticky; top:env(safe-area-inset-top, 0px); z-index:2; background:var(--bg); padding:8px 0; }
+.tabs { display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin:0 0 20px; position:sticky; top:env(safe-area-inset-top, 0px); z-index:2; background:var(--bg); padding:8px 0; }
 .tab { flex-direction:column; gap:2px; padding:10px 6px; border-radius:14px; min-height:0; text-align:center; }
 .tab[aria-selected="true"] { background:var(--surface); border-color:var(--ink); box-shadow:var(--shadow); }
 .tab-ico { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; }
@@ -264,3 +264,8 @@ fieldset { border:1px solid var(--line); border-radius:12px; }
 @media print { .print-only { display:block; font-size:.85rem; margin:4px 0 0 2rem; } .views, .exportbox, .glossary { display:none; } .gdef { display:none; } .term { border:none; } }
 
 .savehint { margin-top: 14px; font-size: 14px; color: var(--muted, #5b6270); }
+
+.tab.got .tab-ico { background:var(--surface-2); color:var(--muted); }
+.verdict.got { color:var(--muted); }
+.gotmark { display:flex; gap:10px; align-items:flex-start; margin:10px 0; padding:10px 12px; border:1px dashed var(--line); border-radius:12px; cursor:pointer; font-size:.95rem; }
+.gotmark input { margin-top:3px; }

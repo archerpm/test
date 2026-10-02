@@ -36,6 +36,16 @@ const pd = await grab(/Скачать PDF/);
 ok(readFileSync(x).subarray(0, 2).toString() === "PK", "xlsx — zip");
 ok(readFileSync(pd).subarray(0, 4).toString() === "%PDF", "pdf");
 ok(x.endsWith(".xlsx") && pd.endsWith(".pdf"), "расширения");
+// ---- «Уже получено»
+await p.getByRole("tab", { name: /Положено/ }).click();
+const firstCard = p.locator("details.measure").first();
+const cardTitle = (await firstCard.locator(".mtitle").innerText()).replace(/\s*уточнить$/, "");
+await firstCard.locator("summary").click();
+await firstCard.getByRole("checkbox", { name: /Уже получаю/ }).click();
+await p.getByRole("tab", { name: /Получено/ }).click();
+ok((await p.innerText("#list")).includes(cardTitle), "мера в разделе «Уже получено»");
+await p.getByRole("tab", { name: /Положено/ }).click();
+ok(!(await p.innerText("#list")).includes(cardTitle), "мера ушла из «Положено»");
 // ---- прогресс: сохранить → открыть заново → загрузить → сразу результат
 const js = await grab(/Сохранить прогресс \(JSON\)/);
 ok(js.endsWith(".json") && JSON.parse(readFileSync(js, "utf8")).v === 1, "json прогресса");
@@ -49,7 +59,7 @@ ok((await p.innerText("body")).includes("Положено"), "результат
 await p.goto(url);
 writeFileSync(`${dir}/bad.json`, "{не json");
 await p.locator('input[type=file]').setInputFiles(`${dir}/bad.json`);
-ok(await p.getByRole("alert").isVisible(), "сообщение о битом файле");
+await p.getByRole("alert").waitFor({ timeout: 5000 });
 ok(!errs.length, "ошибки страницы: " + errs.join("; "));
 console.log("export OK", x, pd);
 await b.close();

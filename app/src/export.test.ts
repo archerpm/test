@@ -25,3 +25,16 @@ describe("экспорт", () => {
     expect(strFromU8(files["xl/workbook.xml"])).toContain('name="Меры"');
   });
 });
+
+describe("«Уже получено»", () => {
+  it("помечается отдельно и идёт после активных мер", () => {
+    const today = new Date(2026, 9, 2);
+    const results = evaluate(MEASURES, QUESTIONS, answers as never, today);
+    const id = results.find((r) => r.verdict === "yes")!.measure.id;
+    const t = buildReport(results, [], aggregateDocuments([], CATALOG), { [`got:${id}`]: true });
+    const col = t[0].rows.map((r) => r[0]);
+    expect(col.filter((v) => v === "Уже получено").length).toBe(1);
+    expect(col.indexOf("Уже получено")).toBeGreaterThan(col.lastIndexOf("Положено"));
+    expect(col.indexOf("Уже получено")).toBeLessThan(col.indexOf("Не подходит"));
+  });
+});

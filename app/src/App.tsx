@@ -271,23 +271,28 @@ function Result(p: {
   const { answers, progress, toggleProgress } = p;
   const today = useMemo(() => new Date(), []);
   const results = useMemo(() => evaluate(MEASURES, QUESTIONS, answers, today), [answers, today]);
-  const g = groupByVerdict(results);
+  // отмеченные «уже получено» уходят в свой раздел и не попадают в план и общий список документов
+  const isGot = (r: MeasureResult) => r.verdict !== "no" && !!progress[`got:${r.measure.id}`];
+  const gotList = results.filter(isGot);
+  const active = results.filter((r) => !isGot(r));
+  const g = groupByVerdict(active);
   const order: Verdict[] = ["yes", "maybe", "later", "no"];
-  const first = order.find((v) => g[v].length) ?? "yes";
-  const [tab, setTab] = useState<Verdict>(first);
+  const first = order.find((v) => g[v].length) ?? (gotList.length ? "got" : "yes");
+  const [tab, setTab] = useState<Verdict | "got">(first);
+  const [note, setNote] = useState("");
   const [view, setView] = useState<View>("measures");
   const [pending, setPending] = useState<string | null>(null);
-  const list = g[tab];
-  const upcoming = results.filter((r) => r.nextDate && r.verdict !== "no");
-  const plan = useMemo(() => buildPlan(results, today), [results, today]);
-  const docs = useMemo(() => aggregateDocuments(results, CATALOG), [results]);
+  const list = tab === "got" ? gotList : g[tab];
+  const upcoming = active.filter((r) => r.nextDate && r.verdict !== "no");
+  const plan = useMemo(() => buildPlan(active, today), [results, progress, today]);
+  const docs = useMemo(() => aggregateDocuments(active, CATALOG), [results, progress]);
 
   // переход к карточке меры из плана или списка документов
   const goMeasure = (id: string) => {
     const r = results.find((x) => x.measure.id === id);
     if (!r) return;
     setView("measures");
-    setTab(r.verdict);
+    setTab(isGot(r) ? "got" : r.verdict);
     setPending(id);
   };
   useEffect(() => {
@@ -343,7 +348,13 @@ function Result(p: {
           )}
 
           <div className="tabs no-print" role="tablist" aria-label="Фильтр по результату">
-            {order.map((v) => (
+            {[...order, "got" as const].map((v) => v === "got" ? (
+              <button key={v} role="tab" id="tab-got" aria-selected={tab === "got"} aria-controls="list" className="tab got" onClick={() => setTab("got")} disabled={!gotList.length}>
+                <span className="tab-ico"><Check size={18} /></span>
+                <span className="tab-name">Получено</span>
+                <span className="tab-n">{gotList.length}</span>
+              </button>
+            ) : (
               <button key={v} role="tab" id={`tab-${v}`} aria-selected={tab === v} aria-controls="list" className={`tab ${v}`} onClick={() => setTab(v)} disabled={!g[v].length}>
                 <span className="tab-ico">{VERDICT_ICON[v]()}</span>
                 <span className="tab-name">{TAB_TITLE[v]}</span>
@@ -354,7 +365,7 @@ function Result(p: {
 
           <div id="list" role="tabpanel" aria-labelledby={`tab-${tab}`}>
             <div className="list-head">
-              <h2 className={`verdict ${tab}`}>{VERDICT_TITLE[tab]}</h2>
+              <h2 className={`verdict ${tab}`}>{tab === "got" ? "Уже получено" : VERDICT_TITLE[tab]}</h2>
               {tab !== "no" && list.length > 0 && (
                 <span className="no-print">
                   <button className="link-btn" onClick={() => toggleAll(true)}>Раскрыть все</button>
@@ -376,12 +387,13 @@ function Result(p: {
                 return items.length ? (
                   <div key={grp} className="group">
                     <h3 className="group-title">{GROUP_TITLE[grp]}</h3>
-                    {items.map((r) => <MeasureCard key={r.measure.id} r={r} progress={progress} toggle={toggleProgress} onOpenForm={p.onOpenForm} />)}
+                    {items.map((r) => <MeasureCard key={r.measure.id} r={r} progress={progress} toggle={(k, v) => { toggleProgress(k, v); if (k.startsWith("got:")) setNote(v ? "Мера перенесена в раздел «Уже получено»." : "Мера возвращена в список."); }} onOpenForm={p.onOpenForm} />)}
                   </div>
                 ) : null;
               })
             )}
             {list.length === 0 && <p className="empty">В этой группе мер нет.</p>}
+            <p className="help" role="status" aria-live="polite">{note}</p>
           </div>
         </>
       )}
@@ -630,6 +642,12 @@ function MeasureCard({ r, progress, toggle, onOpenForm }: { r: MeasureResult; pr
       </summary>
       <div className="mbody">
         <p><Gloss text={m.summary} /></p>
+        {r.verdict !== "no" && (
+          <label className="gotmark no-print">
+            <input type="checkbox" checked={!!progress[`got:${m.id}`]} onChange={(e) => toggle(`got:${m.id}`, e.target.checked)} />
+            <span>{progress[`got:${m.id}`] ? "Уже получаю или оформлено (снимите, чтобы вернуть в список)" : "Уже получаю или оформлено — перенести в «Уже получено»"}</span>
+          </label>
+        )}
         <p className="who"><b>Куда обращаться:</b> <Gloss text={m.authority} /></p>
         <Links links={m.apply} />
         {m.forms && (
