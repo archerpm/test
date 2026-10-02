@@ -58,3 +58,26 @@ export function build516n(v: Form516nValues): Form516nDoc {
     source: FORM516N_SOURCE,
   };
 }
+
+/** Текст заявления для копирования (без разметки). */
+export function docToText(d: Form516nDoc): string {
+  return [
+    d.addressee,
+    `от ${d.from}`,
+    "",
+    d.title[0],
+    d.title[1],
+    "",
+    d.intro,
+    ...d.options.map((o) => `${o.checked ? "[x]" : "[ ]"} ${o.label}`),
+    d.dates,
+    "(дата (даты) предоставления дополнительных оплачиваемых выходных дней)",
+    d.daysLine,
+    `${d.secondParentLead} ${d.secondParent}`,
+    d.attachments,
+    d.confirm,
+    "",
+    `${d.date}    ____________________`,
+    "(дата заполнения заявления)    (подпись)",
+  ].join("\n");
+}

@@ -9,6 +9,7 @@ import type { Answers, Measure, MeasureResult, Question, Verdict } from "./types
 const MEASURES = measuresData as unknown as Measure[];
 const QUESTIONS = questionsData as unknown as Question[];
 const STORE_KEY = "posobie-helper:v1";
+import { EMBED } from "./env";
 
 type Stage = "intro" | "ask" | "result" | "form516n" | "memo";
 
@@ -190,9 +191,10 @@ function Result({ answers, onBack, onRestart, onOpenForm }: { answers: Answers; 
     <section>
       <div className="row no-print">
         <button onClick={onBack}>Изменить ответы</button>
-        <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>
+        {!EMBED && <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>}
         <button onClick={onRestart}>Начать заново</button>
       </div>
+      {EMBED && <p className="help">Пробная версия: кнопка печати отключена. В полной версии (запуск на компьютере) результат сохраняется в PDF через «Печать».</p>}
       <p className="help">Дата подготовки: {new Date().toLocaleDateString("ru-RU")}. Сведения сверены с источниками 02.10.2026.</p>
       {upcoming.length > 0 && (
         <div className="card note">

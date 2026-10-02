@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { build516n, type Form516nValues } from "./form516n";
+import { EMBED } from "../env";
+import { docToText } from "./form516n";
 
 const today = () => new Date().toLocaleDateString("ru-RU");
 
@@ -9,6 +11,19 @@ export default function Form516n({ onBack }: { onBack: () => void }) {
   });
   const set = <K extends keyof Form516nValues>(k: K, val: Form516nValues[K]) => setV({ ...v, [k]: val });
   const d = build516n(v);
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    const text = docToText(d);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      const sel = window.getSelection();
+      const el = document.querySelector("article.paper");
+      if (sel && el) { sel.removeAllRanges(); const r = document.createRange(); r.selectNodeContents(el); sel.addRange(r); }
+    }
+  };
 
   return (
     <section>
@@ -36,7 +51,11 @@ export default function Form516n({ onBack }: { onBack: () => void }) {
           <label>Количество листов приложений<input inputMode="numeric" value={v.sheets} onChange={(e) => set("sheets", e.target.value)} /></label>
           <label>Дата заявления<input value={v.date} onChange={(e) => set("date", e.target.value)} /></label>
         </div>
-        <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>
+        <div className="row">
+          {!EMBED && <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>}
+          <button className={EMBED ? "primary" : ""} onClick={copy}>{copied ? "Скопировано" : "Скопировать текст заявления"}</button>
+        </div>
+        {EMBED && <p className="help">В пробной версии печать отключена: скопируйте текст и вставьте в документ. В полной версии заявление сохраняется в PDF.</p>}
       </div>
 
       <article className="paper" aria-label="Заявление по форме 516н">

@@ -1,4 +1,5 @@
 import type { Measure } from "../types";
+import { EMBED } from "../env";
 
 export default function Memo({ measure, onBack }: { measure: Measure; onBack: () => void }) {
   const f = measure.form!;
@@ -6,7 +7,7 @@ export default function Memo({ measure, onBack }: { measure: Measure; onBack: ()
     <section>
       <div className="no-print row">
         <button onClick={onBack}>← К результату</button>
-        <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>
+        {!EMBED && <button className="primary" onClick={() => window.print()}>Печать / сохранить в PDF</button>}
       </div>
       <article className="paper memo">
         <h2>Памятка подачи: {measure.title}</h2>
