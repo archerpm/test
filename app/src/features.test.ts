@@ -182,7 +182,7 @@ describe("sanitizeAnswers", () => {
 
 describe("безопасность данных", () => {
   it("все ссылки в мерах — https (нет javascript:, http:, data:)", () => {
-    for (const m of MEASURES) {
+    for (const m of M) {
       for (const l of m.apply) expect(l.url, m.id).toMatch(/^https:\/\//);
       if (m.form) expect(m.form.url, m.id).toMatch(/^https:\/\//);
     }
