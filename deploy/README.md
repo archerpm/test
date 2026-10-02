@@ -24,6 +24,18 @@ Linux/macOS/Git Bash: `./deploy/ship.sh root@IP_СЕРВЕРА`.
 
 Если вход не под root, а под пользователем с sudo: `-Target ваш_пользователь@IP`. Установка сама вызовет `sudo`.
 
+## Вход по ключу (без пароля; нужен, если выкладку запускает локальная сессия Claude)
+Один раз, в PowerShell (пароль вводите вы, в своём окне):
+```powershell
+ssh-keygen -t ed25519 -f $env:USERPROFILE\.ssh\posobie_deploy -N '""'
+type $env:USERPROFILE\.ssh\posobie_deploy.pub | ssh root@IP_СЕРВЕРА "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+```
+Затем выкладка без пароля:
+```powershell
+.\deploy\ship.ps1 -Target root@IP_СЕРВЕРА -Identity $env:USERPROFILE\.ssh\posobie_deploy
+```
+После работы удалите этот ключ с сервера (строку с комментарием в `~/.ssh/authorized_keys`) и смените пароль.
+
 ## Домен и HTTPS
 Без домена сайт открывается по `http://IP/`, но **офлайн-режим, установка как приложения и копирование в буфер не работают**: браузеры разрешают их только по HTTPS. Бесплатный сертификат Let's Encrypt выдаётся на домен (`.ru` — около 200 руб./год, запись A на IP сервера). Затем:
 ```powershell
